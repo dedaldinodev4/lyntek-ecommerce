@@ -6,4 +6,5 @@
 * Typescript
 * TailwindCss
 * Redux/toolkit
+* Prisma
 
