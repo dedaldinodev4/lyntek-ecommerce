@@ -1,10 +1,27 @@
+
+export interface ISignUpRequest {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+}
+
+export interface ISignInRequest {
+  email: string;
+  password: string;
+}
+
 export interface IUser {
   id: string;
   name: string;
   email: string;
-  password?: string;
-  role?: string;
-  token?: string;
+  phone: string | null;
+  role: string;
+}
+
+export interface ICurrentUser {
+  user: IUser;
+  access_token: string;
 }
 
 export interface IUserInfo {

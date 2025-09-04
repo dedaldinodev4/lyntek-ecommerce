@@ -1,11 +1,27 @@
+"use client"
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/router";
+import { useForm, SubmitHandler } from 'react-hook-form'
+import type { ISignInRequest } from "@/types/user";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const Signin = () => {
+  const { signIn, user } = useContext(AuthContext)
+  const { 
+    register, 
+    handleSubmit,
+    formState: { errors }
+   } = useForm<ISignInRequest>()
+
+  const onSubmit: SubmitHandler<ISignInRequest> =  async (data) => {
+    await signIn(data);
+  }
+
   return (
     <>
-      <Breadcrumb title={"Signin"} pages={["Signin"]} />
+      <Breadcrumb title={"Entrar"} pages={["Login"]} />
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="max-w-[570px] w-full mx-auto rounded-xl bg-white shadow-1 p-4 sm:p-7.5 xl:p-11">
@@ -17,13 +33,14 @@ const Signin = () => {
             </div>
 
             <div>
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-5">
                   <label htmlFor="email" className="block mb-2.5">
                     Endereço de Email
                   </label>
 
                   <input
+                    {...register('email')}
                     type="email"
                     name="email"
                     id="email"
@@ -38,6 +55,7 @@ const Signin = () => {
                   </label>
 
                   <input
+                    {...register('password')}
                     type="password"
                     name="password"
                     id="password"
