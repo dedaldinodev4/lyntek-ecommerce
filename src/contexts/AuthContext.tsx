@@ -1,9 +1,9 @@
 "use client"
-import { recoverUserInformation, signInRequest } from "@/hooks/auth";
+import { recoverUserInformation, signInRequest, signUpRequest } from "@/hooks/auth";
 import {useRouter} from "next/navigation";
 import Cookies, { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useState, createContext, useEffect, ReactNode } from "react";
-import { ISignInRequest } from "@/types/user";
+import { ISignInRequest, type ISignUpRequest } from "@/types/user";
 
 import { api } from "@/services/";
 
@@ -31,13 +31,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadUserFromCookies();
   }, [])
 
-  const signIn = async ({ email, password }: ISignInRequest) => {
-    const request = await signInRequest({
-      email, password
-    }); 
+  const signIn = async (data: ISignInRequest) => {
+  
+    const request = await signInRequest(data); 
 
     if (request instanceof Error) {
       return new Error('Email or Password Invalid.');
+    } else {
+
+      const { access_token, user } = request;
+      setCookie(undefined, 'lyntek_access_token', access_token, {
+        maxAge: 60 * 60 * 24,
+        sameSite: true,
+        path: "/",
+      })
+      api.defaults.headers['Authorization'] = `Bearer ${access_token}`;
+      setUser(user);
+
+      router.push('/');
+    }
+  }
+
+  const signUp = async (data: ISignUpRequest) => {
+    const request = await signUpRequest(data); 
+
+    if (request instanceof Error) {
+      return new Error(`Something is wrong.`);
     } else {
 
       const { access_token, user } = request;
@@ -65,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAuthenticated: !!user,
       user,
       signIn,
+      signUp,
       logout,
       token: Cookies.get("lyntek_access_token")
     }}>

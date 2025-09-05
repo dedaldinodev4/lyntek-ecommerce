@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { api } from "@/services";
-import { ISignInRequest, IUser, ICurrentUser } from "@/types/user";
+import { ISignInRequest, IUser, ICurrentUser, type ISignUpRequest } from "@/types/user";
 
 
 export const signInRequest = async (credentials: ISignInRequest): Promise<ICurrentUser| Error> => {
@@ -15,6 +15,22 @@ export const signInRequest = async (credentials: ISignInRequest): Promise<ICurre
     return data;
   } catch(error) {
     return new Error('Email or password invalid: '+error); 
+  }
+
+}
+
+export const signUpRequest = async (userData: ISignUpRequest): Promise<ICurrentUser| Error> => {
+  const { email, password, name, phone } = userData;
+
+  try {
+    const request = await api.post('auth/register', {
+      email, password, name, phone
+    })
+
+    const { data } = request.data as ICurrentUser;
+    return data;
+  } catch(error) {
+    return new Error('Error: '+error); 
   }
 
 }

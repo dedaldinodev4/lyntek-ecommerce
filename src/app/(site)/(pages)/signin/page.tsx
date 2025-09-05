@@ -1,13 +1,20 @@
+"use client"
 import Signin from "@/components/Auth/Signin";
-import React from "react";
-import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Signin Page | NextCommerce Nextjs E-commerce template",
-  description: "This is Signin Page for NextCommerce Template",
-  // other metadata
-};
+import React, { useContext, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/contexts/AuthContext";
+
+
 
 const SigninPage = () => {
+  const router = useRouter();
+  const { user } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (user) {
+      router.push('/')
+    }
+  }, [])
   return (
     <main>
       <Signin />

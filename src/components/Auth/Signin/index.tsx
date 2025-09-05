@@ -2,12 +2,13 @@
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import Link from "next/link";
 import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from 'react-hook-form'
 import type { ISignInRequest } from "@/types/user";
 import { AuthContext } from "@/contexts/AuthContext";
 
 const Signin = () => {
+  const router = useRouter()
   const { signIn, user } = useContext(AuthContext)
   const { 
     register, 
@@ -18,6 +19,12 @@ const Signin = () => {
   const onSubmit: SubmitHandler<ISignInRequest> =  async (data) => {
     await signIn(data);
   }
+
+  useEffect(() => {
+    if (user) {
+      router.push('/')
+    }
+  }, [])
 
   return (
     <>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import CustomSelect from "./CustomSelect";
 import { menuData } from "./menuData";
@@ -9,12 +9,17 @@ import { useSelector } from "react-redux";
 import { selectTotalPrice } from "@/redux/features/cart-slice";
 import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import Image from "next/image";
+import { AuthContext } from "@/contexts/AuthContext";
+import type { Menu } from "@/types/Menu";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { openCartModal } = useCartModalContext();
+  const {user} = useContext(AuthContext)
+  const checkMenuItems = !user ? menuData.filter(item => user && item.id!== 4): menuData
+  const [menuItems, setMenuItems] = useState<Menu[]>(checkMenuItems)
 
   const product = useAppSelector((state) => state.cartReducer.items);
   const totalPrice = useSelector(selectTotalPrice);
@@ -158,7 +163,7 @@ const Header = () => {
 
             <div className="flex w-full lg:w-auto justify-between items-center gap-5">
               <div className="flex items-center gap-5">
-                <Link href="/signin" className="flex items-center gap-2.5">
+                { !user && <Link href="/signin" className="flex items-center gap-2.5">
                   <svg
                     width="24"
                     height="24"
@@ -189,7 +194,7 @@ const Header = () => {
                     </p>
                   </div>
                 </Link>
-
+                }
                 <button
                   onClick={handleOpenCartModal}
                   className="flex items-center gap-2.5"
@@ -296,7 +301,7 @@ const Header = () => {
               {/* <!-- Main Nav Start --> */}
               <nav>
                 <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
-                  {menuData.map((menuItem, i) =>
+                  { menuData.map((menuItem, i) =>
                     menuItem.submenu ? (
                       <Dropdown
                         key={i}
