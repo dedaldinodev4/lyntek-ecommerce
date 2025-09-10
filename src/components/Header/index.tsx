@@ -18,8 +18,8 @@ const Header = () => {
   const [stickyMenu, setStickyMenu] = useState(false);
   const { openCartModal } = useCartModalContext();
   const {user} = useContext(AuthContext)
-  const checkMenuItems = !user ? menuData.filter(item => user && item.id!== 4): menuData
-  const [menuItems, setMenuItems] = useState<Menu[]>(checkMenuItems)
+  const menuItems = user ? menuData: menuData.filter(item => item.id!== 4)
+  
 
   const product = useAppSelector((state) => state.cartReducer.items);
   const totalPrice = useSelector(selectTotalPrice);
@@ -301,7 +301,7 @@ const Header = () => {
               {/* <!-- Main Nav Start --> */}
               <nav>
                 <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
-                  { menuData.map((menuItem, i) =>
+                  { menuItems.map((menuItem, i) =>
                     menuItem.submenu ? (
                       <Dropdown
                         key={i}

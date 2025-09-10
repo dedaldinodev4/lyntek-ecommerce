@@ -15,7 +15,9 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
+
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ToastifyProvider } from '@/providers/ToastifyProvider'
 
 export default function RootLayout({
   children,
@@ -37,19 +39,22 @@ export default function RootLayout({
           <>
             <ReduxProvider>
               <AuthProvider>
-                <CartModalProvider>
-                  <ModalProvider>
-                    <PreviewSliderProvider>
+                <ToastifyProvider>
+                  <CartModalProvider>
+                    <ModalProvider>
+                      <PreviewSliderProvider>
 
-                      <Header />
-                      {children}
+                        <Header />
+                        {children}
 
-                      <QuickViewModal />
-                      <CartSidebarModal />
-                      <PreviewSliderModal />
-                    </PreviewSliderProvider>
-                  </ModalProvider>
-                </CartModalProvider>
+                        <QuickViewModal />
+                        <CartSidebarModal />
+                        <PreviewSliderModal />
+                      </PreviewSliderProvider>
+                    </ModalProvider>
+                  </CartModalProvider>
+
+                </ToastifyProvider>
               </AuthProvider>
             </ReduxProvider>
             <ScrollToTop />

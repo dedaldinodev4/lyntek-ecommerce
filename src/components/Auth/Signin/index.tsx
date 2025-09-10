@@ -28,7 +28,7 @@ const Signin = () => {
 
   return (
     <>
-      <Breadcrumb title={"Entrar"} pages={["Login"]} />
+      <Breadcrumb title={""} pages={["Login"]} />
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="max-w-[570px] w-full mx-auto rounded-xl bg-white shadow-1 p-4 sm:p-7.5 xl:p-11">

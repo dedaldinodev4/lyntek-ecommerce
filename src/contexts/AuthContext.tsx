@@ -1,11 +1,12 @@
 "use client"
 import { recoverUserInformation, signInRequest, signUpRequest } from "@/hooks/auth";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Cookies, { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useState, createContext, useEffect, ReactNode } from "react";
 import { ISignInRequest, type ISignUpRequest } from "@/types/user";
 
 import { api } from "@/services/";
+import { toast } from "react-toastify";
 
 
 export const AuthContext = createContext({});
@@ -32,10 +33,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const signIn = async (data: ISignInRequest) => {
-  
-    const request = await signInRequest(data); 
+
+    const request = await signInRequest(data);
 
     if (request instanceof Error) {
+      setTimeout(() => {
+        toast.error('Email ou Senha inválida.')
+      }, 1000)
       return new Error('Email or Password Invalid.');
     } else {
 
@@ -47,13 +51,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
       api.defaults.headers['Authorization'] = `Bearer ${access_token}`;
       setUser(user);
+      setTimeout(() => {
+        toast.success('Autentição feita com sucesso!')
+        router.push('/');
+      }, 1000)
 
-      router.push('/');
     }
   }
 
   const signUp = async (data: ISignUpRequest) => {
-    const request = await signUpRequest(data); 
+    const request = await signUpRequest(data);
 
     if (request instanceof Error) {
       return new Error(`Something is wrong.`);
@@ -67,13 +74,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
       api.defaults.headers['Authorization'] = `Bearer ${access_token}`;
       setUser(user);
-
-      router.push('/');
     }
   }
 
   const logout = async (email: string) => {
-    console.log(email)
     destroyCookie(null, 'lyntek_access_token');
     setUser(null);
     delete api.defaults?.Authorization;
