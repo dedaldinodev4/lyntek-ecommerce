@@ -1,18 +1,19 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useRef, useEffect } from "react";
+import Image from "next/image";
 
 // Import Swiper styles
 import "swiper/css/navigation";
 import "swiper/css";
 import SingleItem from "./SingleItem";
-import { Category } from "@/types/category";
+import { Brand } from "@/types/brand";
 
 type Props = {
-  items: Category[];
+  items: Brand[];
 }
 
-const Categories = (props: Props) => {
+const Brands = (props: Props) => {
   const sliderRef = useRef(null);
 
   const handlePrev = useCallback(() => {
@@ -73,10 +74,10 @@ const Categories = (props: Props) => {
                     </clipPath>
                   </defs>
                 </svg>
-                Categorias
+                Marcas
               </span>
               <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                Navegue por categorias
+                Navegue por marcas
               </h2>
             </div>
 
@@ -149,4 +150,4 @@ const Categories = (props: Props) => {
   );
 };
 
-export default Categories;
+export default Brands;

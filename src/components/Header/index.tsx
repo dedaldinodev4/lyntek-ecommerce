@@ -4,13 +4,15 @@ import Link from "next/link";
 import CustomSelect from "./CustomSelect";
 import { menuData } from "./menuData";
 import Dropdown from "./Dropdown";
-import { useAppSelector } from "@/redux/store";
-import { useSelector } from "react-redux";
+import { useAppSelector, type AppDispatch, type RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import { selectTotalPrice } from "@/redux/features/cart-slice";
 import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import Image from "next/image";
 import { AuthContext } from "@/contexts/AuthContext";
-import type { Menu } from "@/types/Menu";
+import { getCategories } from "@/redux/features/categories-slice";
+import type { Category } from "@/types/category";
+
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +21,16 @@ const Header = () => {
   const { openCartModal } = useCartModalContext();
   const {user} = useContext(AuthContext)
   const menuItems = user ? menuData: menuData.filter(item => item.id!== 4)
+  const dispatch = useDispatch<AppDispatch>();
+  const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
+  const [options, setOptions] = useState<Category[]>([])
+
+
+  useEffect(() => {
+    dispatch(getCategories());
+    console.log(categories)
+    setOptions(categories)
+  }, [dispatch]);
   
 
   const product = useAppSelector((state) => state.cartReducer.items);
@@ -40,17 +52,6 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
   });
-
-  const options = [
-    { label: "Categorias", value: "0" },
-    { label: "Desktop", value: "1" },
-    { label: "Laptop", value: "2" },
-    { label: "Monitor", value: "3" },
-    { label: "Telefone", value: "4" },
-    { label: "Relogios", value: "5" },
-    { label: "Mouse", value: "6" },
-    { label: "Tablet", value: "7" },
-  ];
 
   return (
     <header

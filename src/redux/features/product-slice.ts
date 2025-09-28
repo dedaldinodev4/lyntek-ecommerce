@@ -1,27 +1,28 @@
 
-import type { Product } from "@/types/product";
-import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import { IProduct } from "@/types/product";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "@/services";
 
 interface ProductState {
-  items: any;
+  products: IProduct[] | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ProductState = {
-  items: null,
+  products: null,
   loading: false,
   error: null,
 };
 
-// buscar produtos
+
 export const getProducts = createAsyncThunk(
   "products-all",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await api.get("products");
-      return res.data;
+      const response = await api.get("products");
+      const { data } = response.data; 
+      return  data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Error");
     }
@@ -39,7 +40,7 @@ const productSlice = createSlice({
       })
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.products = action.payload;
       })
       .addCase(getProducts.rejected, (state, action) => {
         state.loading = false;

@@ -41,8 +41,8 @@ const Hero = () => {
                         <span className="font-medium text-heading-5 text-red">
                           10%
                         </span>
-                        <span className="font-medium text-2xl text-dark-4 line-through">
-                          Desc.
+                        <span className="font-medium text-xl text-dark-4">
+                          Desconto
                         </span>
                       </span>
                     </div>

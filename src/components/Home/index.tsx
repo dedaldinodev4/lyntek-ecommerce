@@ -1,8 +1,9 @@
 "use client"
 import React from "react";
 import { useEffect } from "react";
-import {  useAppSelector } from "@/redux/store";
-import { getProducts } from "@/redux/features/product-slice";
+import { useAppSelector } from "@/redux/store";
+import { getCategories } from "@/redux/features/categories-slice";
+import { getBrands } from "@/redux/features/brands-slice";
 import { RootState, AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
 
@@ -10,28 +11,30 @@ import Hero from "./Hero";
 import Categories from "./Categories";
 import NewArrival from "./NewArrivals";
 import PromoBanner from "./PromoBanner";
-import BestSeller from "./BestSeller";
 import CounDown from "./Countdown";
 import Testimonials from "./Testimonials";
 import Newsletter from "../Common/Newsletter";
+import Brands from "./Brands";
 
 const Home = () => {
 
   const dispatch = useDispatch<AppDispatch>();
-  const { items, loading, error } = useAppSelector((state: RootState) => state.productReducer);
+  const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
+  const {  brands } = useAppSelector((state: RootState) => state.brandReducer);
 
   useEffect(() => {
-    dispatch(getProducts());
-    console.log(items)
+    dispatch(getCategories());
+    dispatch(getBrands())
+    console.log(categories, brands)
   }, [dispatch]);
 
   return (
     <main>
       <Hero />
-      <Categories />
+      <Categories items={categories} />
       <NewArrival />
       <PromoBanner />
-      <BestSeller />
+      <Brands items={brands} />
       <CounDown />
       <Testimonials />
       <Newsletter />

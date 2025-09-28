@@ -38,7 +38,7 @@ const CustomSelect = ({ options }) => {
         }`}
         onClick={toggleDropdown}
       >
-        {selectedOption.label}
+        {selectedOption.name}
       </div>
       <div className={`select-items ${isOpen ? "" : "select-hide"}`}>
         {options.slice(1, -1).map((option, index) => (
@@ -49,7 +49,7 @@ const CustomSelect = ({ options }) => {
               selectedOption === option ? "same-as-selected" : ""
             }`}
           >
-            {option.label}
+            {option.name}
           </div>
         ))}
       </div>
