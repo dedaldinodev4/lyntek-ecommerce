@@ -6,3 +6,9 @@ export type Category = {
   created_at: Date;
   updated_at: Date;
 };
+
+export interface ICategoryFromSelect {
+  label: string;
+  value: string;
+  id: string;
+}

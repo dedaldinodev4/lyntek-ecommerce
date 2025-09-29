@@ -1,14 +1,14 @@
 import { Category } from "@/types/category";
 import React from "react";
 import Image from "next/image";
-
+import { PATH_IMAGES } from "@/constants";
 
 
 const SingleItem = ({ item }: { item: Category }) => {
   return (
     <a href="#" className="group flex flex-col items-center">
       <div className="max-w-[130px] w-full bg-[#F2F3F8] h-32.5 rounded-full flex items-center justify-center mb-4">
-        <Image  src={`http://localhost:3333${item.cover}`} alt="Category" width={82} height={62} />
+        <Image  src={`${PATH_IMAGES}/${item.cover}`} alt="Category" width={82} height={62} />
       </div>
 
       <div className="flex justify-center">

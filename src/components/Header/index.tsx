@@ -11,27 +11,28 @@ import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import Image from "next/image";
 import { AuthContext } from "@/contexts/AuthContext";
 import { getCategories } from "@/redux/features/categories-slice";
-import type { Category } from "@/types/category";
-
+import type { ICategoryFromSelect } from "@/types/category";
+import { getCategoryFromSelect } from "@/utils/category";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { openCartModal } = useCartModalContext();
-  const {user} = useContext(AuthContext)
-  const menuItems = user ? menuData: menuData.filter(item => item.id!== 4)
+  const { user } = useContext(AuthContext)
+  const menuItems = user ? menuData : menuData.filter(item => item.id !== 4)
   const dispatch = useDispatch<AppDispatch>();
   const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
-  const [options, setOptions] = useState<Category[]>([])
+  const options = [
+    { name: "Categorias"}
+  ]
 
 
   useEffect(() => {
     dispatch(getCategories());
     console.log(categories)
-    setOptions(categories)
   }, [dispatch]);
-  
+
 
   const product = useAppSelector((state) => state.cartReducer.items);
   const totalPrice = useSelector(selectTotalPrice);
@@ -80,7 +81,10 @@ const Header = () => {
             <div className="max-w-[475px] w-full">
               <form>
                 <div className="flex items-center">
-                  <CustomSelect options={options} />
+                 { 
+                  categories ? <CustomSelect options={categories} /> :
+                  <CustomSelect options={options} /> 
+                 }
 
                   <div className="relative max-w-[333px] sm:min-w-[333px] w-full">
                     {/* <!-- divider --> */}
@@ -164,7 +168,7 @@ const Header = () => {
 
             <div className="flex w-full lg:w-auto justify-between items-center gap-5">
               <div className="flex items-center gap-5">
-                { !user && <Link href="/signin" className="flex items-center gap-2.5">
+                {!user && <Link href="/signin" className="flex items-center gap-2.5">
                   <svg
                     width="24"
                     height="24"
@@ -302,7 +306,7 @@ const Header = () => {
               {/* <!-- Main Nav Start --> */}
               <nav>
                 <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
-                  { menuItems.map((menuItem, i) =>
+                  {menuItems.map((menuItem, i) =>
                     menuItem.submenu ? (
                       <Dropdown
                         key={i}

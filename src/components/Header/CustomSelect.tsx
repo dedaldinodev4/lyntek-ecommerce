@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+
+
 const CustomSelect = ({ options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -38,7 +40,7 @@ const CustomSelect = ({ options }) => {
         }`}
         onClick={toggleDropdown}
       >
-        {selectedOption.name}
+        { selectedOption.name }
       </div>
       <div className={`select-items ${isOpen ? "" : "select-hide"}`}>
         {options.slice(1, -1).map((option, index) => (
