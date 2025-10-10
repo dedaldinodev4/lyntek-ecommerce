@@ -6,3 +6,11 @@ export type Brand = {
   created_at: Date;
   updated_at: Date;
 };
+
+
+
+export interface ICustomerBrand {
+  id: string;
+  name: string;
+  products: number;
+}

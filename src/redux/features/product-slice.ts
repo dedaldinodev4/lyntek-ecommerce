@@ -1,10 +1,11 @@
 
-import { IProduct } from "@/types/product";
+import { Product } from "@/types/product";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "@/services";
+import { customerProducts } from "@/utils/product";
 
 interface ProductState {
-  products: IProduct[] | null;
+  products: Product[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -22,7 +23,9 @@ export const getProducts = createAsyncThunk(
     try {
       const response = await api.get("products");
       const { data } = response.data; 
-      return  data;
+      const result = customerProducts(data);
+
+      return  result;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Error");
     }

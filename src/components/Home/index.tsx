@@ -15,24 +15,27 @@ import CounDown from "./Countdown";
 import Testimonials from "./Testimonials";
 import Newsletter from "../Common/Newsletter";
 import Brands from "./Brands";
+import { getProducts } from "@/redux/features/product-slice";
 
 const Home = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
   const {  brands } = useAppSelector((state: RootState) => state.brandReducer);
+  const { products } = useAppSelector((state: RootState) => state.productReducer);
 
   useEffect(() => {
     dispatch(getCategories());
-    dispatch(getBrands())
-    console.log(categories, brands)
+    dispatch(getProducts());
+    dispatch(getBrands());
+    console.log(categories, brands, products)
   }, [dispatch]);
 
   return (
     <main>
       <Hero />
       <Categories items={categories} />
-      <NewArrival />
+      <NewArrival items={products} />
       <PromoBanner />
       <Brands items={brands} />
       <CounDown />

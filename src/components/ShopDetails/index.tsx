@@ -6,8 +6,14 @@ import Newsletter from "../Common/Newsletter";
 import RecentlyViewdItems from "./RecentlyViewd";
 import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { useAppSelector } from "@/redux/store";
+import { PATH_IMAGES } from "@/constants";
+import type { Product } from "@/types/product";
 
-const ShopDetails = () => {
+type Props = {
+  product: Product;
+}
+
+const ShopDetails = (props :Props) => {
   const [activeColor, setActiveColor] = useState("blue");
   const { openPreviewModal } = usePreviewSlider();
   const [previewImg, setPreviewImg] = useState(0);
@@ -79,29 +85,17 @@ const ShopDetails = () => {
 
   const colors = ["red", "blue", "orange", "pink", "purple"];
 
-  const alreadyExist = localStorage.getItem("productDetails");
-  const productFromStorage = useAppSelector(
-    (state) => state.productDetailsReducer.value
-  );
-
-  const product = alreadyExist ? JSON.parse(alreadyExist) : productFromStorage;
-
-  useEffect(() => {
-    localStorage.setItem("productDetails", JSON.stringify(product));
-  }, [product]);
-
-  // pass the product here when you get the real data.
   const handlePreviewSlider = () => {
     openPreviewModal();
   };
 
-  console.log(product);
+  
 
   return (
     <>
       <Breadcrumb title={"Detalhes do Produto"} pages={["detalhes"]} />
 
-      {product.name === "" ? (
+      {props.product.name === "" ? (
         "Por favor, adicione um produto."
       ) : (
         <>
@@ -133,31 +127,30 @@ const ShopDetails = () => {
                         </svg>
                       </button>
 
-                      <Image
-                        src={product.imgs?.previews[previewImg]}
+                      {props.product && <Image
+                        src={`${PATH_IMAGES}/${props.product.imgs?.previews[previewImg]}`}
                         alt="products-details"
                         width={400}
                         height={400}
-                      />
+                      />}
                     </div>
                   </div>
 
                   {/* ?  &apos;border-blue &apos; :  &apos;border-transparent&apos; */}
                   <div className="flex flex-wrap sm:flex-nowrap gap-4.5 mt-6">
-                    {product.imgs?.thumbnails.map((item, key) => (
+                    {props.product && props.product.imgs?.thumbnails.map((item, key) => (
                       <button
                         onClick={() => setPreviewImg(key)}
                         key={key}
-                        className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${
-                          key === previewImg
+                        className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${key === previewImg
                             ? "border-blue"
                             : "border-transparent"
-                        }`}
+                          }`}
                       >
                         <Image
                           width={50}
                           height={50}
-                          src={item}
+                          src={`${PATH_IMAGES}/${item}`}
                           alt="thumbnail"
                         />
                       </button>
@@ -169,7 +162,7 @@ const ShopDetails = () => {
                 <div className="max-w-[539px] w-full">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold text-xl sm:text-2xl xl:text-custom-3 text-dark">
-                      {product.name}
+                      {props.product.name}
                     </h2>
 
                     {/* <div className="inline-flex font-medium text-custom-sm text-white bg-blue rounded py-0.5 px-2.5">
@@ -315,16 +308,19 @@ const ShopDetails = () => {
                         </defs>
                       </svg>
 
-                      <span className="text-green"> Em Stock </span>
+                      {
+                        props.product.stock ? <span className="text-green"> Em Stock </span>
+                          : <span className="text-red">Stock Vazio</span>
+                      }
                     </div>
                   </div>
 
                   <h3 className="font-medium text-custom-1 mb-4.5">
                     <span className="text-sm sm:text-base text-dark">
-                      Preço: {product.price}Kz
+                      Preço: {props.product.price}{props.product.currency}
                     </span>
                     <span className="line-through">
-                    
+
                     </span>
                   </h3>
 
@@ -348,7 +344,7 @@ const ShopDetails = () => {
                           fill="#3C50E0"
                         />
                       </svg>
-                      Entrega grátis
+                      {props.product.category}
                     </li>
 
                     <li className="flex items-center gap-2.5">
@@ -370,14 +366,14 @@ const ShopDetails = () => {
                           fill="#3C50E0"
                         />
                       </svg>
-                      Desconto de 10% Use Código: PROMO10
+                      {props.product.brand}
                     </li>
                   </ul>
 
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="flex flex-col gap-4.5 border-y border-gray-3 mt-7.5 mb-9 py-9">
-                      
-                      {/* <!-- details item --> */}
+
+                      {/* <!-- details item storage --> */}
                       <div className="flex items-center gap-4">
                         <div className="min-w-[65px]">
                           <h4 className="font-medium text-dark">Armazenamento:</h4>
@@ -401,11 +397,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    storage === item.id
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${storage === item.id
                                       ? "border-blue bg-blue"
                                       : "border-gray-4"
-                                  } `}
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -445,7 +440,7 @@ const ShopDetails = () => {
                         </div>
                       </div>
 
-                      {/* // <!-- details item --> */}
+                      {/* // <!-- details item Type --> */}
                       <div className="flex items-center gap-4">
                         <div className="min-w-[65px]">
                           <h4 className="font-medium text-dark">Tipo:</h4>
@@ -469,11 +464,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    type === item.id
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${type === item.id
                                       ? "border-blue bg-blue"
                                       : "border-gray-4"
-                                  } `}
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -513,7 +507,7 @@ const ShopDetails = () => {
                         </div>
                       </div>
 
-                      {/* // <!-- details item --> */}
+                      {/* // <!-- details item  Chip --> */}
                       <div className="flex items-center gap-4">
                         <div className="min-w-[65px]">
                           <h4 className="font-medium text-dark">Chip:</h4>
@@ -537,11 +531,10 @@ const ShopDetails = () => {
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${
-                                    sim === item.id
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${sim === item.id
                                       ? "border-blue bg-blue"
                                       : "border-gray-4"
-                                  } `}
+                                    } `}
                                 >
                                   <span
                                     className={
@@ -582,6 +575,7 @@ const ShopDetails = () => {
                       </div>
                     </div>
 
+                    {/* <--  Quantity Product  --> */}
                     <div className="flex flex-wrap items-center gap-4.5">
                       <div className="flex items-center rounded-md border border-gray-3">
                         <button
@@ -663,6 +657,7 @@ const ShopDetails = () => {
                         </svg>
                       </a>
                     </div>
+
                   </form>
                 </div>
               </div>
@@ -677,11 +672,10 @@ const ShopDetails = () => {
                   <button
                     key={key}
                     onClick={() => setActiveTab(item.id)}
-                    className={`font-medium lg:text-lg ease-out duration-200 hover:text-blue relative before:h-0.5 before:bg-blue before:absolute before:left-0 before:bottom-0 before:ease-out before:duration-200 hover:before:w-full ${
-                      activeTab === item.id
+                    className={`font-medium lg:text-lg ease-out duration-200 hover:text-blue relative before:h-0.5 before:bg-blue before:absolute before:left-0 before:bottom-0 before:ease-out before:duration-200 hover:before:w-full ${activeTab === item.id
                         ? "text-blue before:w-full"
                         : "text-dark before:w-0"
-                    }`}
+                      }`}
                   >
                     {item.title}
                   </button>
@@ -693,9 +687,8 @@ const ShopDetails = () => {
               {/* <!-- tab content one start --> */}
               <div>
                 <div
-                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${
-                    activeTab === "tabOne" ? "flex" : "hidden"
-                  }`}
+                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${activeTab === "tabOne" ? "flex" : "hidden"
+                    }`}
                 >
                   <div className="max-w-[670px] w-full">
                     <h2 className="font-medium text-2xl text-dark mb-7">
@@ -703,21 +696,7 @@ const ShopDetails = () => {
                     </h2>
 
                     <p className="mb-6">
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the
-                      industry&apos;s standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
-                    </p>
-                    <p className="mb-6">
-                      It has survived not only five centuries, but also the leap
-                      into electronic typesetting, remaining essentially
-                      unchanged. It was popularised in the 1960s.
-                    </p>
-                    <p>
-                      with the release of Letraset sheets containing Lorem Ipsum
-                      passages, and more recently with desktop publishing
-                      software like Aldus PageMaker including versions.
+                      {props.product.description}
                     </p>
                   </div>
 
@@ -746,9 +725,8 @@ const ShopDetails = () => {
               {/* <!-- tab content two start --> */}
               <div>
                 <div
-                  className={`rounded-xl bg-white shadow-1 p-4 sm:p-6 mt-10 ${
-                    activeTab === "tabTwo" ? "block" : "hidden"
-                  }`}
+                  className={`rounded-xl bg-white shadow-1 p-4 sm:p-6 mt-10 ${activeTab === "tabTwo" ? "block" : "hidden"
+                    }`}
                 >
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
@@ -889,9 +867,8 @@ const ShopDetails = () => {
               {/* <!-- tab content three start --> */}
               <div>
                 <div
-                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${
-                    activeTab === "tabThree" ? "flex" : "hidden"
-                  }`}
+                  className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 ${activeTab === "tabThree" ? "flex" : "hidden"
+                    }`}
                 >
                   <div className="max-w-[570px] w-full">
                     <h2 className="font-medium text-2xl text-dark mb-9">
@@ -1408,9 +1385,6 @@ const ShopDetails = () => {
               {/* <!--== tab content end ==--> */}
             </div>
           </section>
-
-          <RecentlyViewdItems />
-
           <Newsletter />
         </>
       )}

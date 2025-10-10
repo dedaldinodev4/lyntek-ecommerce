@@ -11,11 +11,24 @@ import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
 import BrandDropdown from "./BrandDropdown";
+import type { Product } from "@/types/product";
+import { useAppSelector, type AppDispatch, type RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { getProducts } from "@/redux/features/product-slice";
+import { getCategories } from "@/redux/features/categories-slice";
+import { getBrands } from "@/redux/features/brands-slice";
+import { customerCategory } from "@/utils/category";
+import { customerBrand } from "@/utils/brand";
+
 
 const ShopWithSidebar = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [productStyle, setProductStyle] = useState("grid");
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const { products } = useAppSelector((state: RootState) => state.productReducer);
+  const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
+  const { brands } = useAppSelector((state: RootState) => state.brandReducer);
 
   const handleStickyMenu = () => {
     if (window.scrollY >= 80) {
@@ -31,59 +44,12 @@ const ShopWithSidebar = () => {
     { label: "Mais Atingos", value: "2" },
   ];
 
-  const categories = [
-    {
-      name: "Informática",
-      products: 10,
-      isRefined: true,
-    },
-    {
-      name: "Imagem e Som",
-      products: 12,
-      isRefined: false,
-    },
-    {
-      name: "Jogos e Consolas",
-      products: 30,
-      isRefined: false,
-    },
-    {
-      name: "Saúde e Esportes",
-      products: 23,
-      isRefined: false,
-    },
-    {
-      name: "Smartphones e Tablets",
-      products: 10,
-      isRefined: false,
-    },
-    {
-      name: "Eletrodomésticos",
-      products: 13,
-      isRefined: false,
-    },
-  ];
-
-  const brands = [
-    {
-      name: "Apple",
-      products: 40,
-    },
-    {
-      name: "Samsung",
-      products: 23,
-    },
-    {
-      name: "Lenovo",
-      products: 8,
-    },
-    {
-      name: "HP",
-      products: 40,
-    },
-  ];
-
   useEffect(() => {
+    dispatch(getProducts());
+    dispatch(getCategories());
+    dispatch(getBrands());
+    console.log(categories, brands, products)
+    
     window.addEventListener("scroll", handleStickyMenu);
 
     // closing sidebar while clicking outside
@@ -97,16 +63,17 @@ const ShopWithSidebar = () => {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, [dispatch]);
 
   return (
     <>
       <Breadcrumb
         title={"Navega em todos Produtos"}
-        pages={["shop", "/", "shop with sidebar"]}
+        pages={["Produtos", "/", "Catálogo"]}
       />
       <section className="overflow-hidden relative pb-20 pt-5 lg:pt-20 xl:pt-28 bg-[#f3f4f6]">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -162,10 +129,10 @@ const ShopWithSidebar = () => {
                   </div>
 
                   {/* <!-- category box --> */}
-                  <CategoryDropdown categories={categories} />
+                 { categories && <CategoryDropdown categories={customerCategory(categories)} />}
 
                   {/* <!-- brand box --> */}
-                  <BrandDropdown brands={brands} />
+                  { brands && <BrandDropdown brands={customerBrand(brands)} />}
                 </div>
               </form>
             </div>
@@ -274,7 +241,7 @@ const ShopWithSidebar = () => {
                     : "flex flex-col gap-7.5"
                 }`}
               >
-                {shopData.map((item, key) =>
+                {products && products.map((item, key) =>
                   productStyle === "grid" ? (
                     <SingleGridItem item={item} key={key} />
                   ) : (

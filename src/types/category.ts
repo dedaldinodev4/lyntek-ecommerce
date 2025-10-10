@@ -12,3 +12,10 @@ export interface ICategoryFromSelect {
   value: string;
   id: string;
 }
+
+export interface ICustomerCategory {
+  id: string;
+  name: string;
+  products: number;
+  isRefined: boolean;
+}

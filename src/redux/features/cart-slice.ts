@@ -12,7 +12,6 @@ type CartItem = {
   discountedPrice: number;
   quantity: number;
   imgs?: {
-    thumbnails: string[];
     previews: string[];
   };
 };
@@ -39,7 +38,7 @@ export const cart = createSlice({
           price,
           quantity,
           discountedPrice,
-          imgs,
+          imgs
         });
       }
     },

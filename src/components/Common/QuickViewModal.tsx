@@ -9,6 +9,7 @@ import Image from "next/image";
 import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { resetQuickView } from "@/redux/features/quickView-slice";
 import { updateproductDetails } from "@/redux/features/product-details";
+import { PATH_IMAGES } from "@/constants";
 
 const QuickViewModal = () => {
   const { isModalOpen, closeModal } = useModalContext();
@@ -103,7 +104,7 @@ const QuickViewModal = () => {
                       }`}
                     >
                       <Image
-                        src={img || ""}
+                        src={`${PATH_IMAGES}/${img}` || ""}
                         alt="thumbnail"
                         width={61}
                         height={61}
@@ -138,7 +139,7 @@ const QuickViewModal = () => {
                     </button>
 
                     {product.imgs.previews[activePreview] && <Image
-                      src={product?.imgs?.previews?.[activePreview]}
+                      src={`${PATH_IMAGES}/${product?.imgs?.previews?.[activePreview]}`}
                       alt="products-details"
                       width={400}
                       height={400}
