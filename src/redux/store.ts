@@ -9,6 +9,7 @@ import authReducer from './features/auth-slice'
 import productReducer from './features/product-slice'
 import categoryReducer from './features/categories-slice'
 import brandReducer from './features/brands-slice'
+import productPaginationReducer from './features/product-pagination-slice'
 
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
@@ -23,6 +24,7 @@ export const store = configureStore({
     productReducer,
     categoryReducer,
     brandReducer,
+    productPaginationReducer
   },
 });
 

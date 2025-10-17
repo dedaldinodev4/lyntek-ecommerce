@@ -16,6 +16,8 @@ export interface IProductDetail {
   front_camera: string | null;
   battery: string | null;
   frequency_response: string | null;
+  specifications: string | null;
+  careful: string | null;
   microphone: boolean | null;
   wireless: boolean | null;
   wireless_standby_time: boolean | null;

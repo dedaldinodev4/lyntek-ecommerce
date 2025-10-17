@@ -8,6 +8,8 @@ import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { useAppSelector } from "@/redux/store";
 import { PATH_IMAGES } from "@/constants";
 import type { Product } from "@/types/product";
+import { api } from "@/services";
+import type { IProductDetail } from "@/types/productDetail";
 
 type Props = {
   product: Product;
@@ -24,6 +26,7 @@ const ShopDetails = (props :Props) => {
   const [quantity, setQuantity] = useState(1);
 
   const [activeTab, setActiveTab] = useState("tabOne");
+  const [details, setDetails] = useState<IProductDetail>(null)
 
   const storages = [
     {
@@ -89,7 +92,15 @@ const ShopDetails = (props :Props) => {
     openPreviewModal();
   };
 
-  
+  useEffect(() => {
+    const getProductDetails = async () => {
+      const response = await api.get(`products_details/byProduct/${props.product.id}`)
+      const { data } = response.data;
+      setDetails(data);
+    }
+
+    getProductDetails()
+  }, [])
 
   return (
     <>
@@ -696,7 +707,7 @@ const ShopDetails = (props :Props) => {
                     </h2>
 
                     <p className="mb-6">
-                      {props.product.description}
+                    {details && details.specifications}
                     </p>
                   </div>
 
@@ -706,24 +717,16 @@ const ShopDetails = (props :Props) => {
                     </h2>
 
                     <p className="mb-6">
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the
-                      industry&apos;s standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      {details && details.specifications}
                     </p>
-                    <p>
-                      It has survived not only five centuries, but also the leap
-                      into electronic typesetting, remaining essentially
-                      unchanged. It was popularised in the 1960s.
-                    </p>
+                    
                   </div>
                 </div>
               </div>
               {/* <!-- tab content one end --> */}
 
               {/* <!-- tab content two start --> */}
-              <div>
+              {details && <div>
                 <div
                   className={`rounded-xl bg-white shadow-1 p-4 sm:p-6 mt-10 ${activeTab === "tabTwo" ? "block" : "hidden"
                     }`}
@@ -731,21 +734,21 @@ const ShopDetails = (props :Props) => {
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
-                      <p className="text-sm sm:text-base text-dark">Marca</p>
+                      <p className="text-sm sm:text-base text-dark">Sistema Operativo</p>
                     </div>
                     <div className="w-full">
-                      <p className="text-sm sm:text-base text-dark">Apple</p>
+                      <p className="text-sm sm:text-base text-dark">{details.operating_system}</p>
                     </div>
                   </div>
 
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
-                      <p className="text-sm sm:text-base text-dark">Modelo</p>
+                      <p className="text-sm sm:text-base text-dark">Processador</p>
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        iPhone 14 Plus
+                        {details.processor}
                       </p>
                     </div>
                   </div>
@@ -759,22 +762,7 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        6.7 inches
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
-                    <div className="max-w-[450px] min-w-[140px] w-full">
-                      <p className="text-sm sm:text-base text-dark">
-                        Ecrã Tipo
-                      </p>
-                    </div>
-                    <div className="w-full">
-                      <p className="text-sm sm:text-base text-dark">
-                        Super Retina XDR OLED, HDR10, Dolby Vision, 800 nits
-                        (HBM), 1200 nits (peak)
+                        {details.screen}
                       </p>
                     </div>
                   </div>
@@ -788,19 +776,19 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        1284 x 2778 pixels, 19.5:9 ratio
+                        {details.graphic}
                       </p>
                     </div>
                   </div>
-
+                  
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
-                      <p className="text-sm sm:text-base text-dark">Chips</p>
+                      <p className="text-sm sm:text-base text-dark">SSD</p>
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        Apple A15 Bionic (5 nm)
+                        {details.ssd ? details.ssd : 'Não'}
                       </p>
                     </div>
                   </div>
@@ -812,7 +800,7 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        128GB 6GB RAM | 256GB 6GB RAM | 512GB 6GB RAM
+                        {details.storage} {details.ram} RAM
                       </p>
                     </div>
                   </div>
@@ -826,7 +814,7 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        12MP + 12MP | 4K@24/25/30/60fps, som esterio rec.
+                        {details.back_camera}
                       </p>
                     </div>
                   </div>
@@ -840,8 +828,63 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        12 MP | 4K@24/25/30/60fps, 1080p@25/30/60/120fps,
-                        gyro-EIS
+                      {details.front_camera}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* <!-- info item --> */}
+                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        Bluetooth
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        {details.bluetooth ? 'Sim' : 'Não'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* <!-- info item --> */}
+                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        Wi-fi
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        {details.wireless ? 'Sim' : 'Não'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* <!-- info item --> */}
+                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        Microfone
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        {details.microphone ? 'Sim' : 'Não'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* <!-- info item --> */}
+                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        Cancelamento de Ruído
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        {details.noise_cancelling ? 'Sim' : 'Não'}
                       </p>
                     </div>
                   </div>
@@ -855,13 +898,12 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                        Li-Ion 4323 mAh, não removível | 15W wireless (MagSafe),
-                        7.5W wireless (Qi)
+                        {details.battery}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>}
               {/* <!-- tab content two end --> */}
 
               {/* <!-- tab content three start --> */}

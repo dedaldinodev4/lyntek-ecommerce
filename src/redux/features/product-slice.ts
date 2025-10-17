@@ -21,7 +21,7 @@ export const getProducts = createAsyncThunk(
   "products-all",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("products");
+      const response = await api.get("products?page=1&limit=8");
       const { data } = response.data; 
       const result = customerProducts(data);
 

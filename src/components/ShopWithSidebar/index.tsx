@@ -3,22 +3,14 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import CustomSelect from "./CustomSelect";
 import CategoryDropdown from "./CategoryDropdown";
-import GenderDropdown from "./GenderDropdown";
-import SizeDropdown from "./SizeDropdown";
-import ColorsDropdwon from "./ColorsDropdwon";
-import PriceDropdown from "./PriceDropdown";
-import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
-import BrandDropdown from "./BrandDropdown";
-import type { Product } from "@/types/product";
 import { useAppSelector, type AppDispatch, type RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { getProducts } from "@/redux/features/product-slice";
 import { getCategories } from "@/redux/features/categories-slice";
 import { getBrands } from "@/redux/features/brands-slice";
 import { customerCategory } from "@/utils/category";
-import { customerBrand } from "@/utils/brand";
+import { findAllProducts } from "@/redux/features/product-pagination-slice";
 
 
 const ShopWithSidebar = () => {
@@ -26,9 +18,9 @@ const ShopWithSidebar = () => {
   const [productStyle, setProductStyle] = useState("grid");
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
-  const { products } = useAppSelector((state: RootState) => state.productReducer);
+  const { products, paginator } = useAppSelector((state: RootState) => state.productPaginationReducer);
   const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
-  const { brands } = useAppSelector((state: RootState) => state.brandReducer);
+
 
   const handleStickyMenu = () => {
     if (window.scrollY >= 80) {
@@ -45,11 +37,10 @@ const ShopWithSidebar = () => {
   ];
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(findAllProducts({ page: 1, limit: 12 }));
     dispatch(getCategories());
-    dispatch(getBrands());
-    console.log(categories, brands, products)
-    
+    console.log(categories, products)
+
     window.addEventListener("scroll", handleStickyMenu);
 
     // closing sidebar while clicking outside
@@ -69,6 +60,31 @@ const ShopWithSidebar = () => {
     };
   }, [dispatch]);
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= paginator.pages) {
+      dispatch(findAllProducts({ page: newPage, limit: 12 }));
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= paginator.pages; i++) {
+      pages.push(
+        <li key={i}>
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={`flex py-1.5 px-3.5 duration-200 rounded-[3px] ${i === paginator.currentPage ? " bg-blue text-white hover:text-white" : "hover:bg-blue hover:text-white"
+              }`}
+          >
+            {i}
+          </button>
+        </li>
+      );
+    }
+    return pages;
+  };
+
   return (
     <>
       <Breadcrumb
@@ -80,20 +96,18 @@ const ShopWithSidebar = () => {
           <div className="flex gap-7.5">
             {/* <!-- Sidebar Start --> */}
             <div
-              className={`sidebar-content fixed xl:z-1 z-9999 left-0 top-0 xl:translate-x-0 xl:static max-w-[310px] xl:max-w-[270px] w-full ease-out duration-200 ${
-                productSidebar
+              className={`sidebar-content fixed xl:z-1 z-9999 left-0 top-0 xl:translate-x-0 xl:static max-w-[310px] xl:max-w-[270px] w-full ease-out duration-200 ${productSidebar
                   ? "translate-x-0 bg-white p-5 h-screen overflow-y-auto"
                   : "-translate-x-full"
-              }`}
+                }`}
             >
               <button
                 onClick={() => setProductSidebar(!productSidebar)}
                 aria-label="button for product sidebar toggle"
-                className={`xl:hidden absolute -right-12.5 sm:-right-8 flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${
-                  stickyMenu
+                className={`xl:hidden absolute -right-12.5 sm:-right-8 flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${stickyMenu
                     ? "lg:top-20 sm:top-34.5 top-35"
                     : "lg:top-24 sm:top-39 top-37"
-                }`}
+                  }`}
               >
                 <svg
                   className="fill-current"
@@ -129,10 +143,8 @@ const ShopWithSidebar = () => {
                   </div>
 
                   {/* <!-- category box --> */}
-                 { categories && <CategoryDropdown categories={customerCategory(categories)} />}
+                  {categories && <CategoryDropdown categories={customerCategory(categories)} />}
 
-                  {/* <!-- brand box --> */}
-                  { brands && <BrandDropdown brands={customerBrand(brands)} />}
                 </div>
               </form>
             </div>
@@ -147,7 +159,7 @@ const ShopWithSidebar = () => {
                     <CustomSelect options={options} />
 
                     <p>
-                      Lista de <span className="text-dark">9 de 50</span>{" "}
+                      Lista de <span className="text-dark">{paginator.totalCurrentResults} de {paginator.totalResults}</span>{" "}
                       Produtos
                     </p>
                   </div>
@@ -157,11 +169,10 @@ const ShopWithSidebar = () => {
                     <button
                       onClick={() => setProductStyle("grid")}
                       aria-label="button for product grid tab"
-                      className={`${
-                        productStyle === "grid"
+                      className={`${productStyle === "grid"
                           ? "bg-blue border-blue text-white"
                           : "text-dark bg-gray-1 border-gray-3"
-                      } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
+                        } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <svg
                         className="fill-current"
@@ -201,11 +212,10 @@ const ShopWithSidebar = () => {
                     <button
                       onClick={() => setProductStyle("list")}
                       aria-label="button for product list tab"
-                      className={`${
-                        productStyle === "list"
+                      className={`${productStyle === "list"
                           ? "bg-blue border-blue text-white"
                           : "text-dark bg-gray-1 border-gray-3"
-                      } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
+                        } flex items-center justify-center w-10.5 h-9 rounded-[5px] border ease-out duration-200 hover:bg-blue hover:border-blue hover:text-white`}
                     >
                       <svg
                         className="fill-current"
@@ -235,11 +245,10 @@ const ShopWithSidebar = () => {
 
               {/* <!-- Products Grid Tab Content Start --> */}
               <div
-                className={`${
-                  productStyle === "grid"
+                className={`${productStyle === "grid"
                     ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7.5 gap-y-9"
                     : "flex flex-col gap-7.5"
-                }`}
+                  }`}
               >
                 {products && products.map((item, key) =>
                   productStyle === "grid" ? (
@@ -257,10 +266,11 @@ const ShopWithSidebar = () => {
                   <ul className="flex items-center">
                     <li>
                       <button
+
                         id="paginationLeft"
                         aria-label="button for pagination left"
                         type="button"
-                        disabled
+                        disabled={paginator.pages <= 1} onClick={() => handlePageChange(paginator.currentPage - 1)}
                         className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px disabled:text-gray-4"
                       >
                         <svg
@@ -279,74 +289,14 @@ const ShopWithSidebar = () => {
                       </button>
                     </li>
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] bg-blue text-white hover:text-white hover:bg-blue"
-                      >
-                        1
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        2
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        3
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        4
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        5
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        ...
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        10
-                      </a>
-                    </li>
+                   {renderPageNumbers()}
 
                     <li>
                       <button
                         id="paginationLeft"
                         aria-label="button for pagination left"
                         type="button"
+                        disabled={paginator.currentPage >= paginator.pages} onClick={() => handlePageChange(paginator.currentPage + 1)}
                         className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4"
                       >
                         <svg
