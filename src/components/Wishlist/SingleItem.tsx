@@ -7,6 +7,7 @@ import { addItemToCart } from "@/redux/features/cart-slice";
 
 import Image from "next/image";
 import { PATH_IMAGES } from "@/constants";
+import { formattedCurrency } from "@/utils/currency";
 
 const SingleItem = ({ item }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -71,7 +72,7 @@ const SingleItem = ({ item }) => {
       </div>
 
       <div className="min-w-[205px]">
-        <p className="text-dark">{item.price}Kz</p>
+        <p className="text-dark">{formattedCurrency(item.price)}</p>
       </div>
 
       <div className="min-w-[265px]">

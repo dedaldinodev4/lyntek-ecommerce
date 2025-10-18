@@ -10,6 +10,7 @@ import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { resetQuickView } from "@/redux/features/quickView-slice";
 import { updateproductDetails } from "@/redux/features/product-details";
 import { PATH_IMAGES } from "@/constants";
+import { formattedCurrency } from "@/utils/currency";
 
 const QuickViewModal = () => {
   const { isModalOpen, closeModal } = useModalContext();
@@ -316,7 +317,7 @@ const QuickViewModal = () => {
 
                   <span className="flex items-center gap-2">
                     <span className="font-semibold text-dark text-xl xl:text-heading-4">
-                      {product.price}{product.currency}
+                      {formattedCurrency(product.price)}
                     </span>
                     <span className="font-medium text-dark-4 text-lg xl:text-2xl line-through">
                       {product.discountedPrice} Desconto

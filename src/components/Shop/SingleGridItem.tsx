@@ -10,6 +10,7 @@ import { AppDispatch } from "@/redux/store";
 import Link from "next/link";
 import Image from "next/image";
 import { PATH_IMAGES } from "@/constants";
+import { formattedCurrency } from "@/utils/currency";
 
 const SingleGridItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
@@ -153,7 +154,7 @@ const SingleGridItem = ({ item }: { item: Product }) => {
       </h3>
 
       <span className="flex items-center gap-2 font-medium text-lg">
-        <span className="text-dark">{item.price}{item.currency}</span>
+        <span className="text-dark">{formattedCurrency(item.price)}</span>
         <span className="text-dark-4 line-through"></span>
       </span>
     </div>

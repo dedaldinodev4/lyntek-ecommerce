@@ -11,8 +11,8 @@ import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import Image from "next/image";
 import { AuthContext } from "@/contexts/AuthContext";
 import { getCategories } from "@/redux/features/categories-slice";
-import type { ICategoryFromSelect } from "@/types/category";
-import { getCategoryFromSelect } from "@/utils/category";
+import { formattedCurrency } from "@/utils/currency";
+
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -243,10 +243,10 @@ const Header = () => {
 
                   <div>
                     <span className="block text-2xs text-dark-4 uppercase">
-                      Carr.
+                      Carrinho
                     </span>
                     <p className="font-medium text-custom-sm text-dark">
-                      {totalPrice}kz
+                      {formattedCurrency(totalPrice)}
                     </p>
                   </div>
                 </button>

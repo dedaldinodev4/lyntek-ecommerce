@@ -10,12 +10,13 @@ import { PATH_IMAGES } from "@/constants";
 import type { Product } from "@/types/product";
 import { api } from "@/services";
 import type { IProductDetail } from "@/types/productDetail";
+import { formattedCurrency } from "@/utils/currency";
 
 type Props = {
   product: Product;
 }
 
-const ShopDetails = (props :Props) => {
+const ShopDetails = (props: Props) => {
   const [activeColor, setActiveColor] = useState("blue");
   const { openPreviewModal } = usePreviewSlider();
   const [previewImg, setPreviewImg] = useState(0);
@@ -154,8 +155,8 @@ const ShopDetails = (props :Props) => {
                         onClick={() => setPreviewImg(key)}
                         key={key}
                         className={`flex items-center justify-center w-15 sm:w-25 h-15 sm:h-25 overflow-hidden rounded-lg bg-gray-2 shadow-1 ease-out duration-200 border-2 hover:border-blue ${key === previewImg
-                            ? "border-blue"
-                            : "border-transparent"
+                          ? "border-blue"
+                          : "border-transparent"
                           }`}
                       >
                         <Image
@@ -328,7 +329,7 @@ const ShopDetails = (props :Props) => {
 
                   <h3 className="font-medium text-custom-1 mb-4.5">
                     <span className="text-sm sm:text-base text-dark">
-                      Preço: {props.product.price}{props.product.currency}
+                      Preço: {formattedCurrency(props.product.price)}
                     </span>
                     <span className="line-through">
 
@@ -409,8 +410,8 @@ const ShopDetails = (props :Props) => {
                                 {/*  */}
                                 <div
                                   className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${storage === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
                                     } `}
                                 >
                                   <span
@@ -476,8 +477,8 @@ const ShopDetails = (props :Props) => {
                                 {/*  */}
                                 <div
                                   className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${type === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
                                     } `}
                                 >
                                   <span
@@ -519,7 +520,7 @@ const ShopDetails = (props :Props) => {
                       </div>
 
                       {/* // <!-- details item  Chip --> */}
-                      <div className="flex items-center gap-4">
+                      {<div className="flex items-center gap-4">
                         <div className="min-w-[65px]">
                           <h4 className="font-medium text-dark">Chip:</h4>
                         </div>
@@ -543,8 +544,8 @@ const ShopDetails = (props :Props) => {
                                 {/*  */}
                                 <div
                                   className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${sim === item.id
-                                      ? "border-blue bg-blue"
-                                      : "border-gray-4"
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
                                     } `}
                                 >
                                   <span
@@ -583,7 +584,7 @@ const ShopDetails = (props :Props) => {
                             </label>
                           ))}
                         </div>
-                      </div>
+                      </div>}
                     </div>
 
                     {/* <--  Quantity Product  --> */}
@@ -684,8 +685,8 @@ const ShopDetails = (props :Props) => {
                     key={key}
                     onClick={() => setActiveTab(item.id)}
                     className={`font-medium lg:text-lg ease-out duration-200 hover:text-blue relative before:h-0.5 before:bg-blue before:absolute before:left-0 before:bottom-0 before:ease-out before:duration-200 hover:before:w-full ${activeTab === item.id
-                        ? "text-blue before:w-full"
-                        : "text-dark before:w-0"
+                      ? "text-blue before:w-full"
+                      : "text-dark before:w-0"
                       }`}
                   >
                     {item.title}
@@ -707,7 +708,7 @@ const ShopDetails = (props :Props) => {
                     </h2>
 
                     <p className="mb-6">
-                    {details && details.specifications}
+                      {details && details.specifications}
                     </p>
                   </div>
 
@@ -719,7 +720,7 @@ const ShopDetails = (props :Props) => {
                     <p className="mb-6">
                       {details && details.specifications}
                     </p>
-                    
+
                   </div>
                 </div>
               </div>
@@ -732,17 +733,36 @@ const ShopDetails = (props :Props) => {
                     }`}
                 >
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                  {details.height && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">Altura</p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">{details.height}</p>
+                    </div>
+                  </div>}
+                  
+                  {/* <!-- info item --> */}
+                  {details.width && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">Largura</p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">{details.width}</p>
+                    </div>
+                  </div>}
+                  {/* <!-- info item --> */}
+                  {details.operating_system && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">Sistema Operativo</p>
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">{details.operating_system}</p>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                  {details.processor && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">Processador</p>
                     </div>
@@ -751,7 +771,7 @@ const ShopDetails = (props :Props) => {
                         {details.processor}
                       </p>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
@@ -780,7 +800,7 @@ const ShopDetails = (props :Props) => {
                       </p>
                     </div>
                   </div>
-                  
+
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
@@ -794,7 +814,7 @@ const ShopDetails = (props :Props) => {
                   </div>
 
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                  {details.ram && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">Memória</p>
                     </div>
@@ -803,10 +823,10 @@ const ShopDetails = (props :Props) => {
                         {details.storage} {details.ram} RAM
                       </p>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                  {details.back_camera && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">
                         Câmera Principal
@@ -818,9 +838,10 @@ const ShopDetails = (props :Props) => {
                       </p>
                     </div>
                   </div>
-
+                  }
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+
+                  {details.front_camera && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">
                         Câmera Frontal
@@ -828,10 +849,10 @@ const ShopDetails = (props :Props) => {
                     </div>
                     <div className="w-full">
                       <p className="text-sm sm:text-base text-dark">
-                      {details.front_camera}
+                        {details.front_camera}
                       </p>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* <!-- info item --> */}
                   <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
@@ -890,7 +911,7 @@ const ShopDetails = (props :Props) => {
                   </div>
 
                   {/* <!-- info item --> */}
-                  <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                  {details.battery && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
                       <p className="text-sm sm:text-base text-dark">
                         Bateria
@@ -901,7 +922,21 @@ const ShopDetails = (props :Props) => {
                         {details.battery}
                       </p>
                     </div>
-                  </div>
+                  </div>}
+                  
+                  {/* <!-- info item --> */}
+                  {details.warranty && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
+                    <div className="max-w-[450px] min-w-[140px] w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        Garantia
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <p className="text-sm sm:text-base text-dark">
+                        {details.warranty}
+                      </p>
+                    </div>
+                  </div>}
                 </div>
               </div>}
               {/* <!-- tab content two end --> */}

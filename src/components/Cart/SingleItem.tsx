@@ -8,6 +8,7 @@ import {
 
 import Image from "next/image";
 import { PATH_IMAGES } from "@/constants";
+import { formattedCurrency } from "@/utils/currency";
 
 const SingleItem = ({ item }) => {
   const [quantity, setQuantity] = useState(item.quantity);
@@ -51,7 +52,7 @@ const SingleItem = ({ item }) => {
       </div>
 
       <div className="min-w-[180px]">
-        <p className="text-dark">{item.price}Kz</p>
+        <p className="text-dark">{formattedCurrency(item.price)}</p>
       </div>
 
       <div className="min-w-[275px]">
@@ -107,7 +108,7 @@ const SingleItem = ({ item }) => {
       </div>
 
       <div className="min-w-[200px]">
-        <p className="text-dark">{item.price * quantity}Kz</p>
+        <p className="text-dark">{formattedCurrency(item.price * quantity)}</p>
       </div>
 
       <div className="min-w-[50px] flex justify-end">
