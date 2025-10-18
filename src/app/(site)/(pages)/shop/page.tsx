@@ -3,7 +3,7 @@ import ShopWithSidebar from "@/components/ShopWithSidebar";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Lyntek",
+  title: "Lyntek | Produtos",
 };
 
 const ShopWithSidebarPage = () => {
