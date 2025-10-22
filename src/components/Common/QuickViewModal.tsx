@@ -64,9 +64,8 @@ const QuickViewModal = () => {
 
   return (
     <div
-      className={`${
-        isModalOpen ? "z-99999" : "hidden"
-      } fixed top-0 left-0 overflow-y-auto no-scrollbar w-full h-screen sm:py-20 xl:py-25 2xl:py-[230px] bg-dark/70 sm:px-8 px-4 py-5`}
+      className={`${isModalOpen ? "z-99999" : "hidden"
+        } fixed top-0 left-0 overflow-y-auto no-scrollbar w-full h-screen sm:py-20 xl:py-25 2xl:py-[230px] bg-dark/70 sm:px-8 px-4 py-5`}
     >
       <div className="flex items-center justify-center ">
         <div className="w-full max-w-[1100px] rounded-xl shadow-3 bg-white p-7.5 relative modal-content">
@@ -100,9 +99,8 @@ const QuickViewModal = () => {
                     <button
                       onClick={() => setActivePreview(key)}
                       key={key}
-                      className={`flex items-center justify-center w-20 h-20 overflow-hidden rounded-lg bg-gray-1 ease-out duration-200 hover:border-2 hover:border-blue ${
-                        activePreview === key && "border-2 border-blue"
-                      }`}
+                      className={`flex items-center justify-center w-20 h-20 overflow-hidden rounded-lg bg-gray-1 ease-out duration-200 hover:border-2 hover:border-blue ${activePreview === key && "border-2 border-blue"
+                        }`}
                     >
                       <Image
                         src={`${PATH_IMAGES}/${img}` || ""}
@@ -152,7 +150,7 @@ const QuickViewModal = () => {
 
             <div className="max-w-[445px] w-full">
               <span className="inline-block text-custom-xs font-medium text-white py-1 px-3 bg-green mb-6.5">
-                Desconto 20%
+                {product.category}
               </span>
 
               <h3 className="font-semibold text-xl xl:text-heading-5 text-dark mb-4">
@@ -275,7 +273,7 @@ const QuickViewModal = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {product.stock && <div className="flex items-center gap-2">
                   <svg
                     width="20"
                     height="20"
@@ -301,12 +299,11 @@ const QuickViewModal = () => {
                   </svg>
 
                   <span className="font-medium text-dark"> Em Stock </span>
-                </div>
+                </div>}
               </div>
 
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has.
+                {product.description}
               </p>
 
               <div className="flex flex-wrap justify-between gap-5 mt-6 mb-7.5">
@@ -318,9 +315,6 @@ const QuickViewModal = () => {
                   <span className="flex items-center gap-2">
                     <span className="font-semibold text-dark text-xl xl:text-heading-4">
                       {formattedCurrency(product.price)}
-                    </span>
-                    <span className="font-medium text-dark-4 text-lg xl:text-2xl line-through">
-                      {product.discountedPrice} Desconto
                     </span>
                   </span>
                 </div>
@@ -399,7 +393,7 @@ const QuickViewModal = () => {
                   className={`inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark
                   `}
                 >
-                  Adicionar ao carrinho
+                  Carrinho
                 </button>
 
                 <button
@@ -420,7 +414,7 @@ const QuickViewModal = () => {
                       fill=""
                     />
                   </svg>
-                  Adicionar a lista de Desejos
+                  Favoritos
                 </button>
               </div>
             </div>
