@@ -18,6 +18,7 @@ const initialState = {
     description: "",
     discountedPrice: 0,
     img: "",
+    offerExpires_at: null,
     images: [],
     imgs: { thumbnails: [], previews: [] },
   } as Product,

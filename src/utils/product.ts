@@ -14,7 +14,8 @@ export const customerProducts = (items: IProduct[]): Product[] => {
     products.push({
       id, name, description, brand: brand.name,
       category: category.name, price: variants[0].price,
-      currency: variants[0].currency, discountedPrice: 0,
+      currency: variants[0].currency, offerExpires_at: variants[0].offerExpires_at,
+      discountedPrice: variants[0].discountPercent,
       reviews: reviews.length, stock: variants[0].stock,
       imgs: {
         previews: [images[0].url, images[1].url],
@@ -35,7 +36,8 @@ export const customerOnlyProduct = (item: IProduct): Product => {
   product = {
     id, name, description, brand: brand.name,
     category: category.name, price: variants[0].price,
-    currency: variants[0].currency, discountedPrice: 0,
+    currency: variants[0].currency, discountedPrice: variants[0].discountPercent,
+    offerExpires_at: variants[0].offerExpires_at,
     reviews: reviews.length, stock: variants[0].stock,
     imgs: {
       previews: [images[0].url, images[1].url],

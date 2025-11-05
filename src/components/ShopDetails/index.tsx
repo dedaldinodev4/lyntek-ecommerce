@@ -176,10 +176,6 @@ const ShopDetails = (props: Props) => {
                     <h2 className="font-semibold text-xl sm:text-2xl xl:text-custom-3 text-dark">
                       {props.product.name}
                     </h2>
-
-                    {/* <div className="inline-flex font-medium text-custom-sm text-white bg-blue rounded py-0.5 px-2.5">
-                      
-                    </div> */}
                   </div>
 
                   <div className="flex flex-wrap items-center gap-5.5 mb-4.5">

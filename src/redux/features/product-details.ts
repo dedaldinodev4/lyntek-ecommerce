@@ -17,6 +17,7 @@ const initialState = {
     currency: "",
     description: "",
     discountedPrice: 0,
+    offerExpires_at: null,
     img: "",
     images: [],
     imgs: { thumbnails: [], previews: [] },

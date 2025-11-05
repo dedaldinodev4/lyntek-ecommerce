@@ -34,6 +34,7 @@ export type Product = {
   stock: number;
   currency: string;
   discountedPrice: number;
+  offerExpires_at: Date | null;
   imgs?: {
     thumbnails: string[];
     previews: string[];
