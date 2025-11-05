@@ -11,9 +11,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { PATH_IMAGES } from "@/constants";
 import { formattedCurrency } from "@/utils/currency";
+import { calculatePriceDiscount } from "@/utils/price";
 
 const SingleGridItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
+  const total = item.discountedPrice ? calculatePriceDiscount(item.discountedPrice, item.price) : 0
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -41,6 +43,7 @@ const SingleGridItem = ({ item }: { item: Product }) => {
       })
     );
   };
+
 
   return (
     <div className="group">
@@ -150,12 +153,16 @@ const SingleGridItem = ({ item }: { item: Product }) => {
       </div>
 
       <h3 className="font-medium text-dark ease-out duration-200 hover:text-blue mb-1.5">
-        <Link  href={`/shop/${item.id}`}> {item.name} </Link>
+        <Link href={`/shop/${item.id}`}> {item.name} </Link>
       </h3>
 
       <span className="flex items-center gap-2 font-medium text-lg">
-        <span className="text-dark">{formattedCurrency(item.price)}</span>
-        <span className="text-dark-4 line-through"></span>
+        {
+          item.discountedPrice ? <>
+            <span className="text-dark">{formattedCurrency(total)}</span>
+            <span className="text-dark-4 line-through">{formattedCurrency(item.price)}</span>
+          </> : <span className="text-dark">{formattedCurrency(item.price)}</span>
+        }
       </span>
     </div>
   );

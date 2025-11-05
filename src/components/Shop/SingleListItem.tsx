@@ -12,10 +12,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { PATH_IMAGES } from "@/constants";
 import { formattedCurrency } from "@/utils/currency";
+import { calculatePriceDiscount } from "@/utils/price";
 
 const SingleListItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
   const dispatch = useDispatch<AppDispatch>();
+  const total = item.discountedPrice ? calculatePriceDiscount(item.discountedPrice, item.price) : 0
 
   // update the QuickView state
   const handleQuickViewUpdate = () => {
@@ -121,8 +123,12 @@ const SingleListItem = ({ item }: { item: Product }) => {
               <span className="text-dark-4">{item.brand}, {item.category}</span>
             </span>
             <span className="flex items-center gap-2 font-medium text-lg">
-              <span className="text-dark">{formattedCurrency(item.price)}</span>
-              <span className="text-dark-4 line-through"></span>
+              {
+                item.discountedPrice ? <>
+                  <span className="text-dark">{formattedCurrency(total)}</span>
+                  <span className="text-dark-4 line-through">{formattedCurrency(item.price)}</span>
+                </> : <span className="text-dark">{formattedCurrency(item.price)}</span>
+              }
             </span>
           </div>
 
