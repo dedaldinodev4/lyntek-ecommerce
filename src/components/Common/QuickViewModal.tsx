@@ -149,9 +149,9 @@ const QuickViewModal = () => {
             </div>
 
             <div className="max-w-[445px] w-full">
-              <span className="inline-block text-custom-xs font-medium text-white py-1 px-3 bg-green mb-6.5">
-                {product.category}
-              </span>
+              {product.discountedPrice ? <span className="inline-block text-custom-xs font-medium text-white py-1 px-3 bg-green mb-6.5">
+                {product.discountedPrice}% de Desconto
+              </span> : null}
 
               <h3 className="font-semibold text-xl xl:text-heading-5 text-dark mb-4">
                 {product.name}
