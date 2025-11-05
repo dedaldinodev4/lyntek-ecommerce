@@ -18,6 +18,7 @@ import PreLoader from "@/components/Common/PreLoader";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastifyProvider } from '@/providers/ToastifyProvider'
+import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 
 export default function RootLayout({
   children,
@@ -39,22 +40,24 @@ export default function RootLayout({
           <>
             <ReduxProvider>
               <AuthProvider>
-                <ToastifyProvider>
-                  <CartModalProvider>
-                    <ModalProvider>
-                      <PreviewSliderProvider>
+                <ReactQueryProvider>
+                  <ToastifyProvider>
+                    <CartModalProvider>
+                      <ModalProvider>
+                        <PreviewSliderProvider>
 
-                        <Header />
-                        {children}
+                          <Header />
+                          {children}
 
-                        <QuickViewModal />
-                        <CartSidebarModal />
-                        <PreviewSliderModal />
-                      </PreviewSliderProvider>
-                    </ModalProvider>
-                  </CartModalProvider>
+                          <QuickViewModal />
+                          <CartSidebarModal />
+                          <PreviewSliderModal />
+                        </PreviewSliderProvider>
+                      </ModalProvider>
+                    </CartModalProvider>
 
-                </ToastifyProvider>
+                  </ToastifyProvider>
+                </ReactQueryProvider>
               </AuthProvider>
             </ReduxProvider>
             <ScrollToTop />
