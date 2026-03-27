@@ -237,8 +237,8 @@ const QuickViewModal = () => {
 
                   }
 
-                  <span className={`font-medium ${product.stock ? 'text-dark' : 'text-red-dark'}`}>
-                    {product.stock ? 'Em Stock' : 'Esgotado'}
+                  <span className={`font-medium ${product.stock ? 'text-green' : 'text-red'}`}>
+                    {product.stock ? 'Em Stock' : 'Esgotou'}
                   </span>
                 </div>
               </div>

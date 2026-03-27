@@ -1,76 +1,40 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
-import Breadcrumb from "../Common/Breadcrumb";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+import Breadcrumb from "../Common/Breadcrumb";
 import Newsletter from "../Common/Newsletter";
+import { StarReview } from "../Common/StarReview";
 import RecentlyViewdItems from "./RecentlyViewd";
+
 import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
-import { useAppSelector } from "@/redux/store";
-import { PATH_IMAGES } from "@/constants";
-import type { Product } from "@/types/product";
-import { api } from "@/services";
-import type { IProductDetail } from "@/types/productDetail";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { addItemToCart } from "@/redux/features/cart-slice";
+
+import { PATH_IMAGES, STORAGES } from "@/constants";
+import { Product } from "@/types/product";
+import { IProductDetail } from "@/types/productDetail";
 import { formattedCurrency } from "@/utils/currency";
+import { api } from "@/services";
+import { addItemToWishlist } from "@/redux/features/wishlist-slice";
 
 type Props = {
   product: Product;
 }
 
-const ShopDetails = (props: Props) => {
-  const [activeColor, setActiveColor] = useState("blue");
+const ShopDetails = ({ product }: Props) => {
+  
   const { openPreviewModal } = usePreviewSlider();
+  const dispatch = useDispatch<AppDispatch>();
   const [previewImg, setPreviewImg] = useState(0);
-
-  const [storage, setStorage] = useState("gb128");
-  const [type, setType] = useState("active");
-  const [sim, setSim] = useState("dual");
   const [quantity, setQuantity] = useState(1);
 
   const [activeTab, setActiveTab] = useState("tabOne");
   const [details, setDetails] = useState<IProductDetail>(null)
-
-  const storages = [
-    {
-      id: "gb64",
-      title: "64 GB",
-    },
-    {
-      id: "gb128",
-      title: "128 GB",
-    },
-    {
-      id: "gb256",
-      title: "256 GB",
-    },
-    {
-      id: "gb512",
-      title: "521 GB",
-    },
-  ];
-
-  const types = [
-    {
-      id: "active",
-      title: "Activo",
-    },
-
-    {
-      id: "inactive",
-      title: "Inactivo",
-    },
-  ];
-
-  const sims = [
-    {
-      id: "dual",
-      title: "Dual",
-    },
-
-    {
-      id: "e-sim",
-      title: "E Sim",
-    },
-  ];
+  const router = useRouter()
 
   const tabs = [
     {
@@ -87,7 +51,6 @@ const ShopDetails = (props: Props) => {
     },
   ];
 
-  const colors = ["red", "blue", "orange", "pink", "purple"];
 
   const handlePreviewSlider = () => {
     openPreviewModal();
@@ -95,7 +58,7 @@ const ShopDetails = (props: Props) => {
 
   useEffect(() => {
     const getProductDetails = async () => {
-      const response = await api.get(`products_details/byProduct/${props.product.id}`)
+      const response = await api.get(`products_details/byProduct/${product.id}`)
       const { data } = response.data;
       setDetails(data);
     }
@@ -103,12 +66,34 @@ const ShopDetails = (props: Props) => {
     getProductDetails()
   }, [])
 
+  const handleAddToCart = () => {
+    dispatch(
+      addItemToCart({
+        ...product,
+        quantity,
+      })
+    );
+
+    router.push('/checkout')
+  };
+
+  const handleItemToWishList = () => {
+    dispatch(
+      addItemToWishlist({
+        ...product,
+        status: "available",
+        quantity: 1,
+      })
+    );
+  };
+
+
   return (
     <>
       <Breadcrumb title={"Detalhes do Produto"} pages={["detalhes"]} />
 
-      {props.product.name === "" ? (
-        "Por favor, adicione um produto."
+      {product.name === "" ? (
+        "Lamentamos, produto não existe."
       ) : (
         <>
           <section className="overflow-hidden relative pb-20 pt-5 lg:pt-20 xl:pt-28">
@@ -139,8 +124,8 @@ const ShopDetails = (props: Props) => {
                         </svg>
                       </button>
 
-                      {props.product && <Image
-                        src={`${PATH_IMAGES}/${props.product.imgs?.previews[previewImg]}`}
+                      {product && <Image
+                        src={`${PATH_IMAGES}/${product.imgs?.previews[previewImg]}`}
                         alt="products-details"
                         width={400}
                         height={400}
@@ -150,7 +135,7 @@ const ShopDetails = (props: Props) => {
 
                   {/* ?  &apos;border-blue &apos; :  &apos;border-transparent&apos; */}
                   <div className="flex flex-wrap sm:flex-nowrap gap-4.5 mt-6">
-                    {props.product && props.product.imgs?.thumbnails.map((item, key) => (
+                    {product && product.imgs?.thumbnails.map((item, key) => (
                       <button
                         onClick={() => setPreviewImg(key)}
                         key={key}
@@ -174,163 +159,82 @@ const ShopDetails = (props: Props) => {
                 <div className="max-w-[539px] w-full">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold text-xl sm:text-2xl xl:text-custom-3 text-dark">
-                      {props.product.name}
+                      {product.name}
                     </h2>
-                    
+
                   </div>
 
                   <div className="flex flex-wrap items-center gap-5.5 mb-4.5">
                     <div className="flex items-center gap-2.5">
                       {/* <!-- stars --> */}
-                      <div className="flex items-center gap-1">
-                        <svg
-                          className="fill-[#FFA645]"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9172)">
-                            <path
-                              d="M16.7906 6.72187L11.7 5.93438L9.39377 1.09688C9.22502 0.759375 8.77502 0.759375 8.60627 1.09688L6.30002 5.9625L1.23752 6.72187C0.871891 6.77812 0.731266 7.25625 1.01252 7.50938L4.69689 11.3063L3.82502 16.6219C3.76877 16.9875 4.13439 17.2969 4.47189 17.0719L9.05627 14.5687L13.6125 17.0719C13.9219 17.2406 14.3156 16.9594 14.2313 16.6219L13.3594 11.3063L17.0438 7.50938C17.2688 7.25625 17.1563 6.77812 16.7906 6.72187Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9172">
-                              <rect width="18" height="18" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                      <StarReview reviws={product.reviews} starSize={{
+                        width: 18,
+                        height: 18
+                      }} />
 
-                        <svg
-                          className="fill-[#FFA645]"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9172)">
-                            <path
-                              d="M16.7906 6.72187L11.7 5.93438L9.39377 1.09688C9.22502 0.759375 8.77502 0.759375 8.60627 1.09688L6.30002 5.9625L1.23752 6.72187C0.871891 6.77812 0.731266 7.25625 1.01252 7.50938L4.69689 11.3063L3.82502 16.6219C3.76877 16.9875 4.13439 17.2969 4.47189 17.0719L9.05627 14.5687L13.6125 17.0719C13.9219 17.2406 14.3156 16.9594 14.2313 16.6219L13.3594 11.3063L17.0438 7.50938C17.2688 7.25625 17.1563 6.77812 16.7906 6.72187Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9172">
-                              <rect width="18" height="18" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-
-                        <svg
-                          className="fill-[#FFA645]"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9172)">
-                            <path
-                              d="M16.7906 6.72187L11.7 5.93438L9.39377 1.09688C9.22502 0.759375 8.77502 0.759375 8.60627 1.09688L6.30002 5.9625L1.23752 6.72187C0.871891 6.77812 0.731266 7.25625 1.01252 7.50938L4.69689 11.3063L3.82502 16.6219C3.76877 16.9875 4.13439 17.2969 4.47189 17.0719L9.05627 14.5687L13.6125 17.0719C13.9219 17.2406 14.3156 16.9594 14.2313 16.6219L13.3594 11.3063L17.0438 7.50938C17.2688 7.25625 17.1563 6.77812 16.7906 6.72187Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9172">
-                              <rect width="18" height="18" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-
-                        <svg
-                          className="fill-[#FFA645]"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9172)">
-                            <path
-                              d="M16.7906 6.72187L11.7 5.93438L9.39377 1.09688C9.22502 0.759375 8.77502 0.759375 8.60627 1.09688L6.30002 5.9625L1.23752 6.72187C0.871891 6.77812 0.731266 7.25625 1.01252 7.50938L4.69689 11.3063L3.82502 16.6219C3.76877 16.9875 4.13439 17.2969 4.47189 17.0719L9.05627 14.5687L13.6125 17.0719C13.9219 17.2406 14.3156 16.9594 14.2313 16.6219L13.3594 11.3063L17.0438 7.50938C17.2688 7.25625 17.1563 6.77812 16.7906 6.72187Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9172">
-                              <rect width="18" height="18" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-
-                        <svg
-                          className="fill-[#FFA645]"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9172)">
-                            <path
-                              d="M16.7906 6.72187L11.7 5.93438L9.39377 1.09688C9.22502 0.759375 8.77502 0.759375 8.60627 1.09688L6.30002 5.9625L1.23752 6.72187C0.871891 6.77812 0.731266 7.25625 1.01252 7.50938L4.69689 11.3063L3.82502 16.6219C3.76877 16.9875 4.13439 17.2969 4.47189 17.0719L9.05627 14.5687L13.6125 17.0719C13.9219 17.2406 14.3156 16.9594 14.2313 16.6219L13.3594 11.3063L17.0438 7.50938C17.2688 7.25625 17.1563 6.77812 16.7906 6.72187Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9172">
-                              <rect width="18" height="18" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </div>
-
-                      <span> (5 estrelas) </span>
+                      <span> ({product.reviews} estrelas) </span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
 
                       {
-                        props.product.stock ? 
-                        <>
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_375_9221)">
+                        product.stock ?
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_375_9221)">
+                              <path
+                                d="M10 0.5625C4.78125 0.5625 0.5625 4.78125 0.5625 10C0.5625 15.2188 4.78125 19.4688 10 19.4688C15.2188 19.4688 19.4688 15.2188 19.4688 10C19.4688 4.78125 15.2188 0.5625 10 0.5625ZM10 18.0625C5.5625 18.0625 1.96875 14.4375 1.96875 10C1.96875 5.5625 5.5625 1.96875 10 1.96875C14.4375 1.96875 18.0625 5.59375 18.0625 10.0312C18.0625 14.4375 14.4375 18.0625 10 18.0625Z"
+                                fill="#22AD5C"
+                              />
+                              <path
+                                d="M12.6875 7.09374L8.9688 10.7187L7.2813 9.06249C7.00005 8.78124 6.56255 8.81249 6.2813 9.06249C6.00005 9.34374 6.0313 9.78124 6.2813 10.0625L8.2813 12C8.4688 12.1875 8.7188 12.2812 8.9688 12.2812C9.2188 12.2812 9.4688 12.1875 9.6563 12L13.6875 8.12499C13.9688 7.84374 13.9688 7.40624 13.6875 7.12499C13.4063 6.84374 12.9688 6.84374 12.6875 7.09374Z"
+                                fill="#22AD5C"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_375_9221">
+                                <rect width="20" height="20" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        :
+                          <svg
+                            className="fill-current"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 30 30"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
                             <path
-                              d="M10 0.5625C4.78125 0.5625 0.5625 4.78125 0.5625 10C0.5625 15.2188 4.78125 19.4688 10 19.4688C15.2188 19.4688 19.4688 15.2188 19.4688 10C19.4688 4.78125 15.2188 0.5625 10 0.5625ZM10 18.0625C5.5625 18.0625 1.96875 14.4375 1.96875 10C1.96875 5.5625 5.5625 1.96875 10 1.96875C14.4375 1.96875 18.0625 5.59375 18.0625 10.0312C18.0625 14.4375 14.4375 18.0625 10 18.0625Z"
-                              fill="#22AD5C"
+                              d="M12.5379 11.2121C12.1718 10.846 11.5782 10.846 11.212 11.2121C10.8459 11.5782 10.8459 12.1718 11.212 12.5379L13.6741 15L11.2121 17.4621C10.846 17.8282 10.846 18.4218 11.2121 18.7879C11.5782 19.154 12.1718 19.154 12.5379 18.7879L15 16.3258L17.462 18.7879C17.8281 19.154 18.4217 19.154 18.7878 18.7879C19.154 18.4218 19.154 17.8282 18.7878 17.462L16.3258 15L18.7879 12.5379C19.154 12.1718 19.154 11.5782 18.7879 11.2121C18.4218 10.846 17.8282 10.846 17.462 11.2121L15 13.6742L12.5379 11.2121Z"
+                              fill="#fc4449"
                             />
                             <path
-                              d="M12.6875 7.09374L8.9688 10.7187L7.2813 9.06249C7.00005 8.78124 6.56255 8.81249 6.2813 9.06249C6.00005 9.34374 6.0313 9.78124 6.2813 10.0625L8.2813 12C8.4688 12.1875 8.7188 12.2812 8.9688 12.2812C9.2188 12.2812 9.4688 12.1875 9.6563 12L13.6875 8.12499C13.9688 7.84374 13.9688 7.40624 13.6875 7.12499C13.4063 6.84374 12.9688 6.84374 12.6875 7.09374Z"
-                              fill="#22AD5C"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M15 1.5625C7.57867 1.5625 1.5625 7.57867 1.5625 15C1.5625 22.4213 7.57867 28.4375 15 28.4375C22.4213 28.4375 28.4375 22.4213 28.4375 15C28.4375 7.57867 22.4213 1.5625 15 1.5625ZM3.4375 15C3.4375 8.61421 8.61421 3.4375 15 3.4375C21.3858 3.4375 26.5625 8.61421 26.5625 15C26.5625 21.3858 21.3858 26.5625 15 26.5625C8.61421 26.5625 3.4375 21.3858 3.4375 15Z"
+                              fill="#fc4449"
                             />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_375_9221">
-                              <rect width="20" height="20" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                        <span className="text-green"> Em Stock </span>
-                        </>
-                        
-                          : <span className="text-red">Esgotou</span>
+                          </svg>
+
                       }
+
+                      <span className={product.stock ? "text-green" : "text-red"}>
+                        {product.stock ? 'Em Stock' : 'Esgotou'}
+                      </span>
+
                     </div>
                   </div>
 
                   <h3 className="font-medium text-custom-1 mb-4.5">
                     <span className="text-sm sm:text-base text-dark">
-                      Preço: {formattedCurrency(props.product.price)}
+                      Preço: {formattedCurrency(product.price)}
                     </span>
                     <span className="line-through">
 
@@ -338,7 +242,7 @@ const ShopDetails = (props: Props) => {
                   </h3>
 
                   <ul className="flex flex-col gap-2">
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-2.5 font-semibold">
                       <svg
                         width="20"
                         height="20"
@@ -357,10 +261,10 @@ const ShopDetails = (props: Props) => {
                           fill="#3C50E0"
                         />
                       </svg>
-                      {props.product.category}
+                      {product.brand}
                     </li>
 
-                    <li className="flex items-center gap-2.5">
+                    <li className="flex items-center gap-2.5 font-semibold">
                       <svg
                         width="20"
                         height="20"
@@ -379,42 +283,22 @@ const ShopDetails = (props: Props) => {
                           fill="#3C50E0"
                         />
                       </svg>
-                      {props.product.subCategory}
+                      {product.category}/{product.subCategory}/{product.segment}
                     </li>
-                    <li className="flex items-center gap-2.5">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13.3589 8.35863C13.603 8.11455 13.603 7.71882 13.3589 7.47475C13.1149 7.23067 12.7191 7.23067 12.4751 7.47475L8.75033 11.1995L7.5256 9.97474C7.28152 9.73067 6.8858 9.73067 6.64172 9.97474C6.39764 10.2188 6.39764 10.6146 6.64172 10.8586L8.30838 12.5253C8.55246 12.7694 8.94819 12.7694 9.19227 12.5253L13.3589 8.35863Z"
-                          fill="#3C50E0"
-                        />
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M10.0003 1.04169C5.05277 1.04169 1.04199 5.05247 1.04199 10C1.04199 14.9476 5.05277 18.9584 10.0003 18.9584C14.9479 18.9584 18.9587 14.9476 18.9587 10C18.9587 5.05247 14.9479 1.04169 10.0003 1.04169ZM2.29199 10C2.29199 5.74283 5.74313 2.29169 10.0003 2.29169C14.2575 2.29169 17.7087 5.74283 17.7087 10C17.7087 14.2572 14.2575 17.7084 10.0003 17.7084C5.74313 17.7084 2.29199 14.2572 2.29199 10Z"
-                          fill="#3C50E0"
-                        />
-                      </svg>
-                      {props.product.segment}
-                    </li>
+                   
                   </ul>
 
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="flex flex-col gap-4.5 border-y border-gray-3 mt-7.5 mb-9 py-9">
 
                       {/* <!-- details item storage --> */}
-                      <div className="flex items-center gap-4">
+                      { details?.storage && <div className="flex items-center gap-4">
                         <div className="min-w-[65px]">
                           <h4 className="font-medium text-dark">Armazenamento:</h4>
                         </div>
 
                         <div className="flex items-center gap-4">
-                          {storages.map((item, key) => (
+                          {STORAGES.map((item, key) => (
                             <label
                               key={key}
                               htmlFor={item.id}
@@ -426,19 +310,19 @@ const ShopDetails = (props: Props) => {
                                   name="storage"
                                   id={item.id}
                                   className="sr-only"
-                                  onChange={() => setStorage(item.id)}
+                                  disabled
                                 />
 
                                 {/*  */}
                                 <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${storage === item.id
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${details && details.storage === item.value
                                     ? "border-blue bg-blue"
                                     : "border-gray-4"
                                     } `}
                                 >
                                   <span
                                     className={
-                                      storage === item.id
+                                      details && details.storage === item.value
                                         ? "opacity-100"
                                         : "opacity-0"
                                     }
@@ -468,145 +352,134 @@ const ShopDetails = (props: Props) => {
                                   </span>
                                 </div>
                               </div>
-                              {item.title}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* // <!-- details item Type --> */}
-                      <div className="flex items-center gap-4">
-                        <div className="min-w-[65px]">
-                          <h4 className="font-medium text-dark">Tipo:</h4>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          {types.map((item, key) => (
-                            <label
-                              key={key}
-                              htmlFor={item.id}
-                              className="flex cursor-pointer select-none items-center"
-                            >
-                              <div className="relative">
-                                <input
-                                  type="checkbox"
-                                  name="storage"
-                                  id={item.id}
-                                  className="sr-only"
-                                  onChange={() => setType(item.id)}
-                                />
-
-                                {/*  */}
-                                <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${type === item.id
-                                    ? "border-blue bg-blue"
-                                    : "border-gray-4"
-                                    } `}
-                                >
-                                  <span
-                                    className={
-                                      type === item.id
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    }
-                                  >
-                                    <svg
-                                      width="24"
-                                      height="24"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <rect
-                                        x="4"
-                                        y="4.00006"
-                                        width="16"
-                                        height="16"
-                                        rx="4"
-                                        fill="#3C50E0"
-                                      />
-                                      <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M16.3103 9.25104C16.471 9.41178 16.5612 9.62978 16.5612 9.85707C16.5612 10.0844 16.471 10.3024 16.3103 10.4631L12.0243 14.7491C11.8635 14.9098 11.6455 15.0001 11.4182 15.0001C11.191 15.0001 10.973 14.9098 10.8122 14.7491L8.24062 12.1775C8.08448 12.0158 7.99808 11.7993 8.00003 11.5745C8.00199 11.3498 8.09214 11.1348 8.25107 10.9759C8.41 10.8169 8.62499 10.7268 8.84975 10.7248C9.0745 10.7229 9.29103 10.8093 9.4527 10.9654L11.4182 12.931L15.0982 9.25104C15.2589 9.09034 15.4769 9.00006 15.7042 9.00006C15.9315 9.00006 16.1495 9.09034 16.3103 9.25104Z"
-                                        fill="white"
-                                      />
-                                    </svg>
-                                  </span>
-                                </div>
-                              </div>
-                              {item.title}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* // <!-- details item  Chip --> */}
-                      {<div className="flex items-center gap-4">
-                        <div className="min-w-[65px]">
-                          <h4 className="font-medium text-dark">Chip:</h4>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          {sims.map((item, key) => (
-                            <label
-                              key={key}
-                              htmlFor={item.id}
-                              className="flex cursor-pointer select-none items-center"
-                            >
-                              <div className="relative">
-                                <input
-                                  type="checkbox"
-                                  name="storage"
-                                  id={item.id}
-                                  className="sr-only"
-                                  onChange={() => setSim(item.id)}
-                                />
-
-                                {/*  */}
-                                <div
-                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${sim === item.id
-                                    ? "border-blue bg-blue"
-                                    : "border-gray-4"
-                                    } `}
-                                >
-                                  <span
-                                    className={
-                                      sim === item.id
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    }
-                                  >
-                                    <svg
-                                      width="24"
-                                      height="24"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <rect
-                                        x="4"
-                                        y="4.00006"
-                                        width="16"
-                                        height="16"
-                                        rx="4"
-                                        fill="#3C50E0"
-                                      />
-                                      <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M16.3103 9.25104C16.471 9.41178 16.5612 9.62978 16.5612 9.85707C16.5612 10.0844 16.471 10.3024 16.3103 10.4631L12.0243 14.7491C11.8635 14.9098 11.6455 15.0001 11.4182 15.0001C11.191 15.0001 10.973 14.9098 10.8122 14.7491L8.24062 12.1775C8.08448 12.0158 7.99808 11.7993 8.00003 11.5745C8.00199 11.3498 8.09214 11.1348 8.25107 10.9759C8.41 10.8169 8.62499 10.7268 8.84975 10.7248C9.0745 10.7229 9.29103 10.8093 9.4527 10.9654L11.4182 12.931L15.0982 9.25104C15.2589 9.09034 15.4769 9.00006 15.7042 9.00006C15.9315 9.00006 16.1495 9.09034 16.3103 9.25104Z"
-                                        fill="white"
-                                      />
-                                    </svg>
-                                  </span>
-                                </div>
-                              </div>
-                              {item.title}
+                              {item.value}
                             </label>
                           ))}
                         </div>
                       </div>}
+
+                      {/* // <!-- details item Wireless --> */}
+                      <div className="flex items-center gap-4">
+                        <div className="min-w-[65px]">
+                          <h4 className="font-medium text-dark">Wireless:</h4>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <label
+                              key={'wireless-yes'}
+                              htmlFor={'wireless-yes'}
+                              className="flex cursor-pointer select-none items-center"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  name="storage"
+                                  id={'wireless-yes'}
+                                  className="sr-only"
+                                  disabled
+                                />
+
+                                {/*  */}
+                                <div
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${details && details.wireless
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
+                                    } `}
+                                >
+                                  <span
+                                    className={
+                                      details && details.wireless
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }
+                                  >
+                                    <svg
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <rect
+                                        x="4"
+                                        y="4.00006"
+                                        width="16"
+                                        height="16"
+                                        rx="4"
+                                        fill="#3C50E0"
+                                      />
+                                      <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M16.3103 9.25104C16.471 9.41178 16.5612 9.62978 16.5612 9.85707C16.5612 10.0844 16.471 10.3024 16.3103 10.4631L12.0243 14.7491C11.8635 14.9098 11.6455 15.0001 11.4182 15.0001C11.191 15.0001 10.973 14.9098 10.8122 14.7491L8.24062 12.1775C8.08448 12.0158 7.99808 11.7993 8.00003 11.5745C8.00199 11.3498 8.09214 11.1348 8.25107 10.9759C8.41 10.8169 8.62499 10.7268 8.84975 10.7248C9.0745 10.7229 9.29103 10.8093 9.4527 10.9654L11.4182 12.931L15.0982 9.25104C15.2589 9.09034 15.4769 9.00006 15.7042 9.00006C15.9315 9.00006 16.1495 9.09034 16.3103 9.25104Z"
+                                        fill="white"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
+                              Sim
+                            </label>
+
+                            <label
+                              key={'wireless-no'}
+                              htmlFor={'wireless-no'}
+                              className="flex cursor-pointer select-none items-center"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  name="storage"
+                                  id={'wireless-no'}
+                                  className="sr-only"
+                                  disabled
+                                />
+
+                                {/*  */}
+                                <div
+                                  className={`mr-2 flex h-4 w-4 items-center justify-center rounded border ${details && !details.wireless
+                                    ? "border-blue bg-blue"
+                                    : "border-gray-4"
+                                    } `}
+                                >
+                                  <span
+                                    className={
+                                      details && !details.wireless
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }
+                                  >
+                                    <svg
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <rect
+                                        x="4"
+                                        y="4.00006"
+                                        width="16"
+                                        height="16"
+                                        rx="4"
+                                        fill="#3C50E0"
+                                      />
+                                      <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M16.3103 9.25104C16.471 9.41178 16.5612 9.62978 16.5612 9.85707C16.5612 10.0844 16.471 10.3024 16.3103 10.4631L12.0243 14.7491C11.8635 14.9098 11.6455 15.0001 11.4182 15.0001C11.191 15.0001 10.973 14.9098 10.8122 14.7491L8.24062 12.1775C8.08448 12.0158 7.99808 11.7993 8.00003 11.5745C8.00199 11.3498 8.09214 11.1348 8.25107 10.9759C8.41 10.8169 8.62499 10.7268 8.84975 10.7248C9.0745 10.7229 9.29103 10.8093 9.4527 10.9654L11.4182 12.931L15.0982 9.25104C15.2589 9.09034 15.4769 9.00006 15.7042 9.00006C15.9315 9.00006 16.1495 9.09034 16.3103 9.25104Z"
+                                        fill="white"
+                                      />
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
+                              Não
+                            </label>
+                        
+                        </div>
+                      </div>
+
                     </div>
 
                     {/* <--  Quantity Product  --> */}
@@ -663,15 +536,15 @@ const ShopDetails = (props: Props) => {
                         </button>
                       </div>
 
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => handleAddToCart()}
                         className="inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark"
                       >
                         Comprar agora
-                      </a>
+                      </button>
 
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => handleItemToWishList()}
                         className="flex items-center justify-center w-12 h-12 rounded-md border border-gray-3 ease-out duration-200 hover:text-white hover:bg-dark hover:border-transparent"
                       >
                         <svg
@@ -689,7 +562,7 @@ const ShopDetails = (props: Props) => {
                             fill=""
                           />
                         </svg>
-                      </a>
+                      </button>
                     </div>
 
                   </form>
@@ -763,7 +636,7 @@ const ShopDetails = (props: Props) => {
                       <p className="text-sm sm:text-base text-dark">{details.height}</p>
                     </div>
                   </div>}
-                  
+
                   {/* <!-- info item --> */}
                   {details.width && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
@@ -945,7 +818,7 @@ const ShopDetails = (props: Props) => {
                       </p>
                     </div>
                   </div>}
-                  
+
                   {/* <!-- info item --> */}
                   {details.warranty && <div className="rounded-md even:bg-gray-1 flex py-4 px-4 sm:px-5">
                     <div className="max-w-[450px] min-w-[140px] w-full">
