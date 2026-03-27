@@ -49,7 +49,7 @@ const CategoryItem = ({ category }) => {
   );
 };
 
-const CategoryDropdown = ({ categories }) => {
+export const CategoryDropdown = ({ categories }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
@@ -102,5 +102,3 @@ const CategoryDropdown = ({ categories }) => {
     </div>
   );
 };
-
-export default CategoryDropdown;

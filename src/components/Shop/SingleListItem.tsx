@@ -1,18 +1,23 @@
 "use client";
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
-import { Product } from "@/types/product";
+import { StarReview } from "../Common/StarReview";
+
 import { useModalContext } from "@/app/context/QuickViewModalContext";
+
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { updateQuickView } from "@/redux/features/quickView-slice";
 import { addItemToCart } from "@/redux/features/cart-slice";
 import { addItemToWishlist } from "@/redux/features/wishlist-slice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import Link from "next/link";
-import Image from "next/image";
+
+import { Product } from "@/types/product";
 import { PATH_IMAGES } from "@/constants";
 import { formattedCurrency } from "@/utils/currency";
 import { calculatePriceDiscount } from "@/utils/price";
+
 
 const SingleListItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
@@ -34,6 +39,7 @@ const SingleListItem = ({ item }: { item: Product }) => {
     );
   };
 
+  // add to wishlist
   const handleItemToWishList = () => {
     dispatch(
       addItemToWishlist({
@@ -120,7 +126,7 @@ const SingleListItem = ({ item }: { item: Product }) => {
             </h3>
 
             <span className="flex items-center gap-2 font-medium text-sm">
-              <span className="text-dark-4">{item.brand}, {item.category}</span>
+              <span className="text-dark-4">{item.brand}/{item.category}</span>
             </span>
             <span className="flex items-center gap-2 font-medium text-lg">
               {
@@ -132,39 +138,11 @@ const SingleListItem = ({ item }: { item: Product }) => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 mb-2">
-            <div className="flex items-center gap-1">
-              <Image
-                src="/images/icons/icon-star.svg"
-                alt="star icon"
-                width={15}
-                height={15}
-              />
-              <Image
-                src="/images/icons/icon-star.svg"
-                alt="star icon"
-                width={15}
-                height={15}
-              />
-              <Image
-                src="/images/icons/icon-star.svg"
-                alt="star icon"
-                width={15}
-                height={15}
-              />
-              <Image
-                src="/images/icons/icon-star.svg"
-                alt="star icon"
-                width={15}
-                height={15}
-              />
-              <Image
-                src="/images/icons/icon-star.svg"
-                alt="star icon"
-                width={15}
-                height={15}
-              />
-            </div>
+          <div className="flex items-center gap-1 mb-2">
+            <StarReview reviws={item.reviews} starSize={{
+              width: 15,
+              height: 15
+            }} />
 
             <p className="text-custom-sm">({item.reviews})</p>
           </div>

@@ -35,7 +35,7 @@ export const menuData: Menu[] = [
         id: 61,
         title: "Perfil",
         newTab: false,
-        path: "/my-account",
+        path: "/profile",
       },
     ],
   },

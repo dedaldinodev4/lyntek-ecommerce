@@ -10,6 +10,8 @@ const initialState = {
     id: "",
     name: "",
     reviews: 0,
+    segment: "",
+    subCategory: "",
     price: 0,
     stock:0,
     brand: "",

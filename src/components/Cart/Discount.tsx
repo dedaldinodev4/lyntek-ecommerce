@@ -1,9 +1,21 @@
 import React from "react";
+import { useForm, SubmitHandler } from 'react-hook-form'
+
+type IDiscount = {
+  discount: string;
+  userId: string;
+}
 
 const Discount = () => {
+  const { register, handleSubmit } = useForm<IDiscount>()
+
+  const submitHandler: SubmitHandler<IDiscount> = async (data) => {
+    const { } = data;
+
+  }
   return (
     <div className="lg:max-w-[670px] w-full">
-      <form>
+      <form onSubmit={handleSubmit(submitHandler)}>
         {/* <!-- coupon box --> */}
         <div className="bg-white shadow-1 rounded-[10px]">
           <div className="border-b border-gray-3 py-5 px-4 sm:px-5.5">
@@ -15,8 +27,9 @@ const Discount = () => {
               <div className="max-w-[426px] w-full">
                 <input
                   type="text"
-                  name="coupon"
-                  id="coupon"
+                  name="discount"
+                  id="discount"
+                  {...register('discount')}
                   placeholder="Digite seu código de desconto"
                   className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                 />

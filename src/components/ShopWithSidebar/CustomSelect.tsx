@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const CustomSelect = ({ options }) => {
+export const CustomSelect = ({ options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const selectRef = useRef(null);
@@ -61,4 +61,4 @@ const CustomSelect = ({ options }) => {
   );
 };
 
-export default CustomSelect;
+

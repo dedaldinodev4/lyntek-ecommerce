@@ -103,10 +103,10 @@ const Cart = () => {
             <p className="pb-6">Seu carrinho está vázio!</p>
 
             <Link
-              href="/shop-with-sidebar"
+              href="/shop"
               className="w-96 mx-auto flex justify-center font-medium text-white bg-dark py-[13px] px-6 rounded-md ease-out duration-200 hover:bg-opacity-95"
             >
-              Continuar comprando
+              Ver Produtos
             </Link>
           </div>
         </>

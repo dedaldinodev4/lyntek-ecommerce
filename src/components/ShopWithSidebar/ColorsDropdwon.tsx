@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 
-const ColorsDropdwon = () => {
+export const ColorsDropdwon = () => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
   const [activeColor, setActiveColor] = useState("blue");
 
-  const colors = ["red", "blue", "orange", "pink", "purple"];
+  const colors = ["red", "blue", "orange", "pink", "gray", "green", "black"];
 
   return (
     <div className="bg-white shadow-1 rounded-lg">
@@ -79,4 +79,3 @@ const ColorsDropdwon = () => {
   );
 };
 
-export default ColorsDropdwon;

@@ -1,6 +1,7 @@
 import { selectTotalPrice } from "@/redux/features/cart-slice";
 import { useAppSelector } from "@/redux/store";
 import { formattedCurrency } from "@/utils/currency";
+import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -54,12 +55,14 @@ const OrderSummary = () => {
           </div>
 
           {/* <!-- checkout button --> */}
-          <button
-            type="submit"
-            className="w-full flex justify-center font-medium text-white bg-blue py-3 px-6 rounded-md ease-out duration-200 hover:bg-blue-dark mt-7.5"
-          >
-            Finalizar compra
-          </button>
+          <Link href={'/checkout'}>
+            <button
+              type="submit"
+              className="w-full flex justify-center font-medium text-white bg-blue py-3 px-6 rounded-md ease-out duration-200 hover:bg-blue-dark mt-7.5"
+            >
+              Finalizar compra
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
-import type { Brand } from "./brand";
-import type { Category } from "./category";
-import type { IProductDetail } from "./productDetail";
-import type { IProductImage } from "./productImage";
-import type { IReview } from "./review";
-import type { IProductVariant } from "./variant";
+import { Brand } from "./brand";
+import { IProductDetail } from "./productDetail";
+import { IProductImage } from "./productImage";
+import { IReview } from "./review";
+import { Segment } from "./segment";
+import { IProductVariant } from "./variant";
 
 export interface IProduct {
   id: string;
@@ -11,8 +11,8 @@ export interface IProduct {
   description: string | null;
   brandId: string;
   brand: Brand;
-  categoryId: string;
-  category: Category;
+  segmentId: string;
+  segment: Segment;
   images: IProductImage[];
   variants: IProductVariant[];
   reviews: IReview[];
@@ -29,6 +29,8 @@ export type Product = {
   description: string | null;
   brand: string;
   category: string;
+  segment: string;
+  subCategory: string;
   reviews: number;
   price: number;
   stock: number;

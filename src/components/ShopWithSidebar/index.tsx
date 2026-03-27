@@ -1,16 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
 import Breadcrumb from "../Common/Breadcrumb";
-import CustomSelect from "./CustomSelect";
-import CategoryDropdown from "./CategoryDropdown";
+import { CustomSelect } from "./CustomSelect";
+import { CategoryDropdown } from "./CategoryDropdown";
+import { StorageDropdown } from './StorageDropdown'
+import { ColorsDropdwon } from "./ColorsDropdwon";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
-import { useAppSelector, type AppDispatch, type RootState } from "@/redux/store";
+
 import { useDispatch } from "react-redux";
+import { useAppSelector, AppDispatch, RootState } from "@/redux/store";
 import { getCategories } from "@/redux/features/categories-slice";
-import { getBrands } from "@/redux/features/brands-slice";
-import { customerCategory } from "@/utils/category";
 import { findAllProducts } from "@/redux/features/product-pagination-slice";
+
+import { customerCategory } from "@/utils/category";
 
 
 const ShopWithSidebar = () => {
@@ -39,7 +43,6 @@ const ShopWithSidebar = () => {
   useEffect(() => {
     dispatch(findAllProducts({ page: 1, limit: 12 }));
     dispatch(getCategories());
-    console.log(categories, products)
 
     window.addEventListener("scroll", handleStickyMenu);
 
@@ -53,7 +56,6 @@ const ShopWithSidebar = () => {
     if (productSidebar) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -144,6 +146,10 @@ const ShopWithSidebar = () => {
 
                   {/* <!-- category box --> */}
                   {categories && <CategoryDropdown categories={customerCategory(categories)} />}
+                  <ColorsDropdwon />
+                  <StorageDropdown />
+              
+
 
                 </div>
               </form>

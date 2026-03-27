@@ -14,6 +14,8 @@ const initialState = {
     stock:0,
     brand: "",
     category: "",
+    subCategory: "",
+    segment: "",
     currency: "",
     description: "",
     discountedPrice: 0,
