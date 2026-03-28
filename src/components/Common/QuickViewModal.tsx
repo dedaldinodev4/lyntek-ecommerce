@@ -16,6 +16,7 @@ import { PATH_IMAGES } from "@/constants";
 import { formattedCurrency } from "@/utils/currency";
 
 import { StarReview } from "./StarReview";
+import { useProductRating } from "@/hooks/reviews/useProductRating";
 
 
 
@@ -28,6 +29,7 @@ const QuickViewModal = () => {
 
   // get the product data
   const product = useAppSelector((state) => state.quickViewReducer.value);
+  const { data: reviews } = useProductRating(product.id)
 
   const [activePreview, setActivePreview] = useState(0);
 
@@ -179,12 +181,12 @@ const QuickViewModal = () => {
               <div className="flex flex-wrap items-center gap-5 mb-6">
                 <div className="flex items-center gap-1.5">
                   {/* <!-- stars --> */}
-                  <StarReview reviws={product.reviews} starSize={{
+                  {reviews && <StarReview reviws={reviews?.average} starSize={{
                     width: 18,
                     height: 18
-                  }} />
+                  }} />}
                   <span>
-                    <span className="font-medium text-dark"> {product.reviews.toFixed(1)} Avaliação </span>
+                    <span className="font-medium text-dark"> {reviews?.average.toFixed(1)} Avaliação </span>
                   </span>
                 </div>
 

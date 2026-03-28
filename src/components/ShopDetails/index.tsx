@@ -13,13 +13,16 @@ import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { addItemToCart } from "@/redux/features/cart-slice";
+import { addItemToWishlist } from "@/redux/features/wishlist-slice";
+
+import { useProductRating } from "@/hooks/reviews/useProductRating";
 
 import { PATH_IMAGES, STORAGES } from "@/constants";
 import { Product } from "@/types/product";
 import { IProductDetail } from "@/types/productDetail";
 import { formattedCurrency } from "@/utils/currency";
 import { api } from "@/services";
-import { addItemToWishlist } from "@/redux/features/wishlist-slice";
+import { useProductDetails } from "@/hooks/productDetails/useProductDetails";
 
 type Props = {
   product: Product;
@@ -33,8 +36,10 @@ const ShopDetails = ({ product }: Props) => {
   const [quantity, setQuantity] = useState(1);
 
   const [activeTab, setActiveTab] = useState("tabOne");
-  const [details, setDetails] = useState<IProductDetail>(null)
+
   const router = useRouter()
+  const { data: reviews } = useProductRating(product.id)
+  const { data: details } = useProductDetails(product.id)
 
   const tabs = [
     {
@@ -55,16 +60,6 @@ const ShopDetails = ({ product }: Props) => {
   const handlePreviewSlider = () => {
     openPreviewModal();
   };
-
-  useEffect(() => {
-    const getProductDetails = async () => {
-      const response = await api.get(`products_details/byProduct/${product.id}`)
-      const { data } = response.data;
-      setDetails(data);
-    }
-
-    getProductDetails()
-  }, [])
 
   const handleAddToCart = () => {
     dispatch(
@@ -167,12 +162,14 @@ const ShopDetails = ({ product }: Props) => {
                   <div className="flex flex-wrap items-center gap-5.5 mb-4.5">
                     <div className="flex items-center gap-2.5">
                       {/* <!-- stars --> */}
-                      <StarReview reviws={product.reviews} starSize={{
+                     {reviews && <StarReview reviws={reviews?.average} starSize={{
                         width: 18,
                         height: 18
-                      }} />
-
-                      <span> ({product.reviews} estrelas) </span>
+                      }} />}
+                      <span className="text-dark"> 
+                        {reviews?.average.toFixed(1)} Avaliação
+                        </span>
+                      
                     </div>
 
                     <div className="flex items-center gap-1.5">

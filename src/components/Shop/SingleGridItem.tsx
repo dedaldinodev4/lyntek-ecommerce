@@ -13,6 +13,8 @@ import { addItemToCart } from "@/redux/features/cart-slice";
 import { addItemToWishlist } from "@/redux/features/wishlist-slice";
 import { AppDispatch } from "@/redux/store";
 
+import { useProductRating } from "@/hooks/reviews/useProductRating";
+
 import { Product } from "@/types/product";
 import { PATH_IMAGES } from "@/constants";
 import { formattedCurrency } from "@/utils/currency";
@@ -21,7 +23,10 @@ import { calculatePriceDiscount } from "@/utils/price";
 
 const SingleGridItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
-  const total = item.discountedPrice ? calculatePriceDiscount(item.discountedPrice, item.price) : 0
+  const total = item.discountedPrice 
+                      ? calculatePriceDiscount(item.discountedPrice, item.price) 
+                      : 0
+  const { data: reviews } = useProductRating(item.id)
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -152,12 +157,12 @@ const SingleGridItem = ({ item }: { item: Product }) => {
       </div>
 
       <div className="flex items-center gap-2.5 mb-2">
-        <StarReview reviws={item.reviews} starSize={{
+        {reviews && <StarReview reviws={reviews.average} starSize={{
           width: 15,
           height: 15
-        }} />
+        }} />}
 
-        <p className="text-custom-sm">({item.reviews})</p>
+        <p className="text-custom-sm">({reviews?.total})</p>
       </div>
 
       <h3 className="font-medium text-dark ease-out duration-200 hover:text-blue mb-1.5">

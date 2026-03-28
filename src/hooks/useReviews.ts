@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from '@/lib/api';
 
+import { reviewsService } from "@/services/review.service";
 
 export const useReviews = () => {
   return useQuery({
     queryKey: ['reviews'],
-    queryFn: async () => {
-      const { data } = await api.get(`/reviews`)
-      return data.data;
-    }
+    queryFn: () => reviewsService.getReviews(),
   })
 }

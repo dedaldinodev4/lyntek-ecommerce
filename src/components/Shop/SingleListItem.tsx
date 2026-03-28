@@ -7,6 +7,8 @@ import { StarReview } from "../Common/StarReview";
 
 import { useModalContext } from "@/app/context/QuickViewModalContext";
 
+import { useProductRating } from "@/hooks/reviews/useProductRating";
+
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { updateQuickView } from "@/redux/features/quickView-slice";
@@ -22,7 +24,11 @@ import { calculatePriceDiscount } from "@/utils/price";
 const SingleListItem = ({ item }: { item: Product }) => {
   const { openModal } = useModalContext();
   const dispatch = useDispatch<AppDispatch>();
-  const total = item.discountedPrice ? calculatePriceDiscount(item.discountedPrice, item.price) : 0
+  const total = item.discountedPrice 
+    ? calculatePriceDiscount(item.discountedPrice, item.price) 
+    : 0
+  const { data: reviews } = useProductRating(item.id)
+
 
   // update the QuickView state
   const handleQuickViewUpdate = () => {
@@ -139,12 +145,12 @@ const SingleListItem = ({ item }: { item: Product }) => {
           </div>
 
           <div className="flex items-center gap-1 mb-2">
-            <StarReview reviws={item.reviews} starSize={{
+           {reviews && <StarReview reviws={reviews?.average} starSize={{
               width: 15,
               height: 15
-            }} />
+            }} />}
 
-            <p className="text-custom-sm">({item.reviews})</p>
+            <p className="text-custom-sm">({reviews?.total})</p>
           </div>
         </div>
       </div>
