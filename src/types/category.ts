@@ -19,3 +19,9 @@ export interface ICustomerCategory {
   products: number;
   isRefined: boolean;
 }
+
+export interface IProductCategory {
+  id: string;
+  name: string;
+  total_products: number;
+}

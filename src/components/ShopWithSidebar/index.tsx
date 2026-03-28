@@ -15,6 +15,7 @@ import { getCategories } from "@/redux/features/categories-slice";
 import { findAllProducts } from "@/redux/features/product-pagination-slice";
 
 import { customerCategory } from "@/utils/category";
+import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 
 
 const ShopWithSidebar = () => {
@@ -23,7 +24,8 @@ const ShopWithSidebar = () => {
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { products, paginator } = useAppSelector((state: RootState) => state.productPaginationReducer);
-  const { categories } = useAppSelector((state: RootState) => state.categoryReducer);
+
+  const { data: categories } = useProductsByCategory()
 
 
   const handleStickyMenu = () => {
@@ -145,11 +147,9 @@ const ShopWithSidebar = () => {
                   </div>
 
                   {/* <!-- category box --> */}
-                  {categories && <CategoryDropdown categories={customerCategory(categories)} />}
+                  {categories && <CategoryDropdown categories={categories} />}
                   <ColorsDropdwon />
                   <StorageDropdown />
-              
-
 
                 </div>
               </form>

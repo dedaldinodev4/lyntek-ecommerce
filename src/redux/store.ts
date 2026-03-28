@@ -24,7 +24,7 @@ export const store = configureStore({
     productReducer,
     categoryReducer,
     brandReducer,
-    productPaginationReducer
+    productPaginationReducer,
   },
 });
 
