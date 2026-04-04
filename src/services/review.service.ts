@@ -22,6 +22,11 @@ export const reviewsService = {
     return data.data
   },
 
+  async getReviewByProduct(productId: string ) {
+    const { data } = await api.get(`/reviews/by-product/${productId}`);
+    return data.data;
+  },
+
   async getProductsRating(productId: string ) {
     const { data } = await api.get(`/reviews/product-rating/${productId}`);
     return data.data;
