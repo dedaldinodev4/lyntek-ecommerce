@@ -1,11 +1,11 @@
-import type { IProductDetail } from "@/types/productDetail";
-
 type Details = Record<string, string>;
 
 const productDetails: Details = {
   processor: 'Processador', 
   height: 'Altura', 
   width: 'Largura',
+  thickness: 'Espessura',
+  frequency_response: 'Frequência',
   graphic: 'Ecrã Resolução', 
   ssd: 'SSD', 
   ram: 'Memória',
@@ -19,7 +19,11 @@ const productDetails: Details = {
   microphone: 'Microfone',
   noise_cancelling: 'Cancelamento de Ruído', 
   battery: 'Bateria',
-  operating_system: 'Sistema Operativo'
+  operating_system: 'Sistema Operativo',
+  ports: 'Portas',
+  connectors: 'Conexão',
+  connectionType: 'Tipo de Conexão',
+  sound_isolating: 'Isolamento de Som',
 }
 
 const getProperty = <T, K extends keyof T>( obj: T, key: K) => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -7,6 +7,9 @@ import Breadcrumb from "../Common/Breadcrumb";
 import Newsletter from "../Common/Newsletter";
 import { StarReview } from "../Common/StarReview";
 import RecentlyViewdItems from "./RecentlyViewd";
+import { SpecificationTab } from "./SpecificationTab";
+import { ReviewTab } from "./ReviewTab";
+import { DetailSingleItem } from "./DetailSingleItem";
 
 import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 
@@ -16,16 +19,12 @@ import { addItemToCart } from "@/redux/features/cart-slice";
 import { addItemToWishlist } from "@/redux/features/wishlist-slice";
 
 import { useProductRating } from "@/hooks/reviews/useProductRating";
+import { useProductDetails } from "@/hooks/productDetails/useProductDetails";
 
 import { PATH_IMAGES, STORAGES } from "@/constants";
 import { Product } from "@/types/product";
-import { IProductDetail } from "@/types/productDetail";
 import { formattedCurrency } from "@/utils/currency";
-import { api } from "@/services";
-import { useProductDetails } from "@/hooks/productDetails/useProductDetails";
-import { SpecificationTab } from "./SpecificationTab";
-import { ReviewTab } from "./ReviewTab";
-import { DetailSingleItem } from "./DetailSingleItem";
+
 
 type Props = {
   product: Product;
@@ -59,7 +58,6 @@ const ShopDetails = ({ product }: Props) => {
     },
   ];
 
-
   const handlePreviewSlider = () => {
     openPreviewModal();
   };
@@ -84,7 +82,6 @@ const ShopDetails = ({ product }: Props) => {
       })
     );
   };
-
 
   return (
     <>
@@ -611,55 +608,46 @@ const ShopDetails = ({ product }: Props) => {
                 >
                   {/* <!-- info item --> */}
                   {details.height && <DetailSingleItem title="height" value={details.height} />}
-
-                  {/* <!-- info item --> */}
                   {details.width && <DetailSingleItem title="width" value={details.width} />}
+                  {details.thickness && <DetailSingleItem title="thickness" value={details.thickness} />}
+                  
                   {/* <!-- info item --> */}
                   {details.operating_system && 
                   <DetailSingleItem title="operating_system" value={details.operating_system} />}
-
-                  {/* <!-- info item --> */}
                   {details.processor && <DetailSingleItem title="processor" value={details.processor} />}
+                  {details.frequency_response && <DetailSingleItem title="frequency_response" value={details.frequency_response} />}
 
                   {/* <!-- info item --> */}
                   {details.screen && <DetailSingleItem title="screen" value={details.screen} />}
-
-                  {/* <!-- info item --> */}
                   {details.graphic && <DetailSingleItem title="graphic" value={details.graphic} />}
 
                   {/* <!-- info item --> */}
                   {details.ssd && <DetailSingleItem title="ssd" value={details.ssd} />}
-
-                  {/* <!-- info item --> */}
                   {details.ram && <DetailSingleItem title="ram" value={details.ram} />}
-
+                  {details.ports && <DetailSingleItem title="ports" value={details.ports} />}
+                  
                   {/* <!-- info item --> */}
                   {details.back_camera && <DetailSingleItem title="back_camera" value={details.back_camera} />}
-                  {/* <!-- info item --> */}
-
                   {details.front_camera && <DetailSingleItem title="front_camera" value={details.front_camera} />}
 
                   {/* <!-- info item --> */}
                   {details.bluetooth && <DetailSingleItem title="bluetooth" value={'Bluetooth 5.4'} />}
-
-                  {/* <!-- info item --> */}
                   {details.wireless && <DetailSingleItem title="wireless" value={'Wi-Fi 6/802.11ax'} />}
-
-                  {/* <!-- info item --> */}
                   {details.microphone && <DetailSingleItem title="microphone" value={'SIM'} />}
+                  {details.connectors && <DetailSingleItem title="connectors" value={details.connectors} />}
+                  {details.connectionType && <DetailSingleItem title="connectionType" value={details.connectionType} />}
 
                   {/* <!-- info item --> */}
                   {details.noise_cancelling && <DetailSingleItem title="noise_cancelling" value={'SIM'} />}
+                  {details.sound_isolating && <DetailSingleItem title="sound_isolating" value={'SIM'} />}
 
                   {/* <!-- info item --> */}
                   {details.battery && <DetailSingleItem title="battery" value={details.battery} />}
-
-                  {/* <!-- info item --> */}
                   {details.warranty && <DetailSingleItem title="warranty" value={details.warranty} />}
+
                 </div>
               </div>}
               {/* <!-- tab content two end --> */}
-
               {/* <!-- tab content three start --> */}
               <div>
                 {product.id &&
@@ -679,5 +667,4 @@ const ShopDetails = ({ product }: Props) => {
     </>
   );
 };
-
 export default ShopDetails;
