@@ -10,6 +10,15 @@ const STORAGES = [
   { id: 'tb1', value: '1TB', actived: false},
 ]
 
+const STARS = [
+  { id: 1, value: 'terrible'},
+  { id: 2, value: 'bad'},
+  { id: 3, value: 'normal'},
+  { id: 4, value: 'good'},
+  { id: 5, value: 'better'},
+];
+
 export {
-  STORAGES
+  STORAGES,
+  STARS 
 }

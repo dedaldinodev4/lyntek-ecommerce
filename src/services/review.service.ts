@@ -1,10 +1,11 @@
 import { api } from "@/lib/api";
+import { CreateReview } from "@/types/review";
 
 export const reviewsService = { 
 
-  async create(payload: unknown) {
-    const { data } = await api.post("/reviews", payload);
-    return data.data;
+  async create(data: CreateReview) {
+    const response = await api.post("/reviews", data);
+    return response.data;
   },
 
   async getReviews() {

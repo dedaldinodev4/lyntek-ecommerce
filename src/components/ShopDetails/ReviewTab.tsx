@@ -44,7 +44,7 @@ export const ReviewTab = ({ productId, actived }: Props) => {
 
                     <div>
                       <h3 className="font-medium text-dark">
-                        {review?.user.name}
+                        {review.display_name}
                       </h3>
                       <p className="text-custom-sm">
                         Cliente
@@ -59,7 +59,7 @@ export const ReviewTab = ({ productId, actived }: Props) => {
                 </div>
 
                 <p className="text-dark mt-6">
-                  “{review.comment}’’
+                  “{review.title}’’
                 </p>
               </div>
             ))
