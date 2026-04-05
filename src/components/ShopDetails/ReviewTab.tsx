@@ -68,7 +68,7 @@ export const ReviewTab = ({ productId, actived }: Props) => {
       </div>
 
       <div className="max-w-[550px] w-full">
-        <ReviewForm />
+        <ReviewForm productId={productId} />
       </div>
     </div>
   )

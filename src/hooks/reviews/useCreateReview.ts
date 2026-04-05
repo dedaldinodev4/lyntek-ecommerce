@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { reviewsService } from "@/services/review.service";
 
-export function useCreateService() {
+export function useCreateReview() {
   const queryClient = useQueryClient();
 
   return useMutation({

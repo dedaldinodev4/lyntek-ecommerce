@@ -640,10 +640,10 @@ const ShopDetails = ({ product }: Props) => {
                   {details.front_camera && <DetailSingleItem title="front_camera" value={details.front_camera} />}
 
                   {/* <!-- info item --> */}
-                  {details.bluetooth && <DetailSingleItem title="bluetooth" value={'2.4'} />}
+                  {details.bluetooth && <DetailSingleItem title="bluetooth" value={'Bluetooth 5.4'} />}
 
                   {/* <!-- info item --> */}
-                  {details.wireless && <DetailSingleItem title="wireless" value={'4.6'} />}
+                  {details.wireless && <DetailSingleItem title="wireless" value={'Wi-Fi 6/802.11ax'} />}
 
                   {/* <!-- info item --> */}
                   {details.microphone && <DetailSingleItem title="microphone" value={'SIM'} />}

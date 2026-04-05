@@ -12,6 +12,6 @@ export type IReview = {
   updated_at: Date;
 }
 
-export type CreateReview = Omit<IReview, "id" | "created_at" | "updated_at">
+export type CreateReviewDTO = Omit<IReview, "id" | "created_at" | "updated_at">
 
 

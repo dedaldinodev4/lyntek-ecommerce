@@ -1,10 +1,12 @@
+import { sleep } from "@/helpers/sleep";
 import { api } from "@/lib/api";
-import { CreateReview } from "@/types/review";
+import { CreateReviewDTO } from "@/types/review";
 
 export const reviewsService = { 
 
-  async create(data: CreateReview) {
+  async create(data: CreateReviewDTO) {
     const response = await api.post("/reviews", data);
+    await sleep(2000)
     return response.data;
   },
 
