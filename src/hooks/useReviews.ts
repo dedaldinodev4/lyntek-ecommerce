@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { reviewsService } from "@/services/review.service";
 
-export const useReviews = () => {
+export const useReviews = (limit: number) => {
   return useQuery({
-    queryKey: ['reviews'],
-    queryFn: () => reviewsService.getReviews(),
+    queryKey: ['reviews', limit],
+    queryFn: () => reviewsService.getReviews(limit),
   })
 }

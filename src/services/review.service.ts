@@ -10,8 +10,8 @@ export const reviewsService = {
     return response.data;
   },
 
-  async getReviews() {
-    const { data } = await api.get(`/reviews`);
+  async getReviews(limit: number) {
+    const { data } = await api.get(`/reviews?limit=${limit}`);
     return data.data;
   },
 
