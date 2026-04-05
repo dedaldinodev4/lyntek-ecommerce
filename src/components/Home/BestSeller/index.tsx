@@ -1,7 +1,8 @@
 import React from "react";
-import SingleItem from "./SingleItem";
 import Image from "next/image";
 import Link from "next/link";
+
+import SingleItem from "./SingleItem";
 import shopData from "@/components/Shop/shopData";
 
 const BestSeller = () => {

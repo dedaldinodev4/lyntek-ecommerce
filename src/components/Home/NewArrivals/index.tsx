@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+
 import ProductItem from "@/components/Common/ProductItem";
-import shopData from "@/components/Shop/shopData";
-import type { Product } from "@/types/product";
+
+import { Product } from "@/types/product";
 
 type Props = {
   items: Product[];
