@@ -25,8 +25,8 @@ export const reviewsService = {
     return data.data
   },
 
-  async getReviewByProduct(productId: string ) {
-    const { data } = await api.get(`/reviews/by-product/${productId}`);
+  async getReviewByProduct(productId: string, limit: number) {
+    const { data } = await api.get(`/reviews/by-product/${productId}?limit=${limit}`);
     return data.data;
   },
 

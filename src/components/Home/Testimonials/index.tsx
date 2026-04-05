@@ -37,10 +37,10 @@ const Testimonials = () => {
                     width={17}
                     height={17}
                   />
-                  Nossos membros
+                  Feedbacks de nossos clientes
                 </span>
                 <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                  Clientes Feedbacks
+                  Testemunhos
                 </h2>
               </div>
 

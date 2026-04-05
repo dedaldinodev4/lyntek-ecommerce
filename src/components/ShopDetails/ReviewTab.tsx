@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const ReviewTab = ({ productId, actived }: Props) => {
-  const { data } = useReviewByProduct(productId)
+  const { data } = useReviewByProduct(productId, 3)
 
 
   return (
