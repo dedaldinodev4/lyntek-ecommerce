@@ -1,16 +1,18 @@
 "use client";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useRef } from "react";
-import testimonialsData from "./testimonialsData";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css/navigation";
 import "swiper/css";
-import SingleItem from "./SingleItem";
+
+import { SingleItem } from "./SingleItem";
+import { useReviews } from "@/hooks/useReviews";
 
 const Testimonials = () => {
   const sliderRef = useRef(null);
+  const { data: testimonials } = useReviews(6)
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;
@@ -102,7 +104,7 @@ const Testimonials = () => {
                 },
               }}
             >
-              {testimonialsData.map((item, key) => (
+              { testimonials && testimonials.map((item, key) => (
                 <SwiperSlide key={key}>
                   <SingleItem testimonial={item} />
                 </SwiperSlide>
