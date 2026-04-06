@@ -28,7 +28,7 @@ export const customerOnlyProduct = (item: IProduct): Product => {
     segment: segment.name, subCategory: subCategory.name,
     category: category.name, price: variants[0].price,
     currency: variants[0].currency, discountedPrice: variants[0].discountPercent,
-    offerExpires_at: variants[0].offerExpires_at,
+    sku: variants[0].sku,offerExpires_at: variants[0].offerExpires_at,
     reviews: reviews.length, stock: variants[0].stock,
     imgs: {
       previews: [images[0].url, images[1].url],

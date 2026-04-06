@@ -15,6 +15,7 @@ const initialState = {
     price: 0,
     stock:0,
     brand: "",
+    sku: "",
     category: "",
     currency: "",
     description: "",

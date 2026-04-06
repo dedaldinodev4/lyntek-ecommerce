@@ -1,10 +1,21 @@
 "use client";
 import React from "react";
+
+import { useAppSelector, type AppDispatch } from "@/redux/store";
+
 import Breadcrumb from "../Common/Breadcrumb";
-import { useAppSelector } from "@/redux/store";
-import SingleItem from "./SingleItem";
+import { SingleItem } from "./SingleItem";
+import { useDispatch } from "react-redux";
+import { removeAllItemsFromWishlist } from "@/redux/features/wishlist-slice";
 
 export const Wishlist = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleRemoveAllItemsFromWishlist = () => {
+    dispatch(removeAllItemsFromWishlist());
+  };
+
   const wishlistItems = useAppSelector((state) => state.wishlistReducer.items);
 
   return (
@@ -14,7 +25,11 @@ export const Wishlist = () => {
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-7.5">
             <h2 className="font-medium text-dark text-2xl">Minha Lista de desejos</h2>
-            <button className="text-blue">Limpar Favoritos</button>
+            <button
+              onClick={() => handleRemoveAllItemsFromWishlist()}
+              className="text-blue">
+              Limpar Favoritos
+            </button>
           </div>
 
           <div className="bg-white rounded-[10px] shadow-1">
@@ -32,7 +47,7 @@ export const Wishlist = () => {
                   </div>
 
                   <div className="min-w-[265px]">
-                    <p className="text-dark">Stock</p>
+                    <p className="text-dark">Desconto</p>
                   </div>
 
                   <div className="min-w-[150px]">
@@ -41,8 +56,8 @@ export const Wishlist = () => {
                 </div>
 
                 {/* <!-- wish item --> */}
-                {wishlistItems.map((item, key) => (
-                  <SingleItem item={item} key={key} />
+                {wishlistItems.map((product, key) => (
+                  <SingleItem product={product} key={key} />
                 ))}
               </div>
             </div>

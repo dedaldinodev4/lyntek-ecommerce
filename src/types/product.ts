@@ -31,6 +31,7 @@ export type Product = {
   category: string;
   segment: string;
   subCategory: string;
+  sku: string;
   reviews: number;
   price: number;
   stock: number;
