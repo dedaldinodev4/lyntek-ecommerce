@@ -2,12 +2,20 @@
 import React from "react";
 import Discount from "./Discount";
 import OrderSummary from "./OrderSummary";
-import { useAppSelector } from "@/redux/store";
+import { useAppSelector, type AppDispatch } from "@/redux/store";
 import SingleItem from "./SingleItem";
 import Breadcrumb from "../Common/Breadcrumb";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { removeAllItemsFromCart } from "@/redux/features/cart-slice";
 
 const Cart = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleRemoveAllItemsFromCart = () => {
+    dispatch(removeAllItemsFromCart());
+  };
+
   const cartItems = useAppSelector((state) => state.cartReducer.items);
 
   return (
@@ -21,8 +29,13 @@ const Cart = () => {
         <section className="overflow-hidden py-20 bg-gray-2">
           <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
             <div className="flex flex-wrap items-center justify-between gap-5 mb-7.5">
-              <h2 className="font-medium text-dark text-2xl">Seu Carrinho</h2>
-              <button className="text-blue">Limpar Carrinho</button>
+              <h2 className="font-medium text-dark text-2xl">Lista de Produtos</h2>
+              <button
+                className="text-blue"
+                onClick={() => handleRemoveAllItemsFromCart()}
+              >
+                Limpar Carrinho
+              </button>
             </div>
 
             <div className="bg-white rounded-[10px] shadow-1">
