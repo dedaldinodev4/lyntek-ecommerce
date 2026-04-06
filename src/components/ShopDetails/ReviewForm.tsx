@@ -23,6 +23,7 @@ type Props = {
 
 export const ReviewForm = ({ productId }: Props) => {
   const [activeStar, setActiveStar] = useState(1);
+  const [comment, setComment] = useState("")
   const [loading, setLoading] = useState(false)
   const { user } = useContext(AuthContext)
   const {
@@ -51,6 +52,14 @@ export const ReviewForm = ({ productId }: Props) => {
     }, 3000)
 
   }
+
+  const changeCommentInput = (event) => {
+    const { target } = event;
+    const { value } = target;
+    setComment(value)
+  }
+
+   
 
 
   return (
@@ -127,14 +136,15 @@ export const ReviewForm = ({ productId }: Props) => {
           </div>
 
           <div className="mb-5">
-            <label htmlFor="comments" className="block mb-2.5">
+            <label htmlFor="comment" className="block mb-2.5">
               Comentários
             </label>
 
             <textarea
               {...register('comment')}
-              name="comments"
-              id="comments"
+              defaultValue={""}
+              name="comment"
+              id="comment"
               rows={5}
               placeholder="Deixa seu comentário sobre o produto"
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full p-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
