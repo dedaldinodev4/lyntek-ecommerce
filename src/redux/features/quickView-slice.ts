@@ -9,7 +9,6 @@ const initialState = {
   value: {
     id: "",
     name: "",
-    reviews: 0,
     segment: "",
     subCategory: "",
     price: 0,

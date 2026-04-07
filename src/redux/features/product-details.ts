@@ -9,7 +9,6 @@ const initialState = {
   value: {
     id: "",
     name: "",
-    reviews: 0,
     price: 0,
     stock:0,
     brand: "",

@@ -15,8 +15,6 @@ export interface IProduct {
   segment: Segment;
   images: IProductImage[];
   variants: IProductVariant[];
-  reviews: IReview[];
-  productDetails: IProductDetail[];
   status: boolean;
   created_at: Date;
   updated_at: Date;
@@ -32,7 +30,6 @@ export type Product = {
   segment: string;
   subCategory: string;
   sku: string;
-  reviews: number;
   price: number;
   stock: number;
   currency: string;
